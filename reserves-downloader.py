@@ -20,21 +20,21 @@ def url_available(url: str) -> bool:
 def claw(url: str, path='./clawed') -> None:
     if not url.endswith('index.html'):
         raise Exception('URL Wrong!')
-    if url.find('book4') == -1:
-        raise Exception('Only support "book4" yet.')
+    # if url.find('book4') == -1:
+    #     raise Exception('Only support "book4" yet.')
     if not os.path.exists(path):
         os.makedirs(path)
     # print(url)
-    url = url[:-11]  # '/index.html'
+    url = url[7:-11]  # 'http://', '/index.html'
     if url.endswith('mobile'):
         url = url[:-7]
     # print(url)
     url = url[:-3]
     index_url = url + '{:03d}/index.html'
     id = 0
-    while id <= 999 and url_available(index_url.format(id)):
-        image_url = url.replace('book4/', 'book4') + f'{id:03d}/files/mobile/{{}}.jpg'
-        # print(image_url)
+    while id <= 999 and url_available('http://' + index_url.format(id)):
+        image_url = 'http://' + url.replace('//', '/') + f'{id:03d}/files/mobile/{{}}.jpg'
+        print(image_url)
         cnt = 1
         while cnt != 0:
             try:

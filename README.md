@@ -11,11 +11,9 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 程序会自动从第一章开始爬取每一章的每一页，保存在`./clawed`下。
 
-目前仅支持`book4`类型（判断方法：URL中`book`后的数字）
-
 ## TODO
 - 自动将图片整合为PDF（临时方案：使用学校提供的`Foxit Editor`创建PDF）
-- 支持`book6` [eg.](http://reserves.lib.tsinghua.edu.cn/book6/00009127/00009127000/files/mobile/1.jpg)
+- ~~支持`book6`~~  Done.
 
 欢迎Star/Issue/PR.
 
