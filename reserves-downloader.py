@@ -17,24 +17,30 @@ def url_available(url: str) -> bool:
     return True
 
 
-def mkdir(path):
+def mkdir(path: str) -> None:
     # print(path)
     if not os.path.exists(path):
         os.makedirs(path)
 
 
-def claw(url: str) -> None:
-    if not url.endswith('index.html'):
-        raise Exception('URL Wrong!')
+def url_shape(url: str) -> str:
     url = url[7:-11]  # 'http://', '/index.html'
     if url.endswith('mobile'):
         url = url[:-7]
-    url = url[:-3]
-    path = './clawed_' + url.split('/')[-1]
+    url = url[:-3]  # '000'
+    return url
+
+
+def claw(url: str) -> None:
+    if not url.endswith('index.html'):
+        raise Exception('URL Invalid!')
+    url = url_shape(url)
+    path = './clawed_' + url[url.rfind('/') + 1:]
     mkdir(path)
-    index_url = url + '{:03d}/index.html'
     id = 0
     page_num = 0
+    index_url = url + '{:03d}/index.html'
+    print('Start clawing...')
     while id <= 999 and url_available('http://' + index_url.format(id)):
         image_url = 'http://' + url.replace('//', '/') + f'{id:03d}/files/mobile/{{}}.jpg'
         # print(image_url)
