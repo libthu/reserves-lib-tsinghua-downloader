@@ -1,3 +1,4 @@
+import os
 import urllib
 from urllib import request
 
@@ -19,6 +20,7 @@ def url_available(url: str) -> bool:
 def claw(url: str) -> None:
     if not url.endswith('index.html'):
         raise Exception('URL Wrong!')
+    os.makedirs('./clawed')
     url = url.rstrip('000/index.html')
     index_url = url + '{:03d}/index.html'
     id = 0
@@ -28,7 +30,7 @@ def claw(url: str) -> None:
         cnt = 1
         while cnt != 0:
             try:
-                request.urlretrieve(image_url.format(cnt), f'./clawed/{id}_{cnt}.png')
+                request.urlretrieve(image_url.format(cnt), f'./clawed/{id:03d}_{cnt:05d}.png')
             except urllib.error.HTTPError as e:
                 assert e.code == 404
                 print(f'Clawed: {id=}, {cnt=}')
