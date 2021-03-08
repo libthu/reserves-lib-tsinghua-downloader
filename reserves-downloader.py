@@ -49,6 +49,7 @@ def claw(url: str) -> None:
             cnt = cnt + 1
             page_num = page_num + 1
         id = id + 1
+    print(f'Total page number: {page_num}')
 
 
 if __name__ == '__main__':
