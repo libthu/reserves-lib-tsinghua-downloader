@@ -1,6 +1,5 @@
-import requests
 import urllib
-from urllib.request import urlretrieve
+from urllib import request
 
 __author__ = 'i207M'
 
@@ -10,6 +9,10 @@ __author__ = 'i207M'
 
 def url_available(url: str) -> bool:
     # print(url)
+    try:
+        request.urlopen(url)
+    except urllib.error.HTTPError:
+        return False
     return True
 
 
@@ -25,14 +28,13 @@ def claw(url: str) -> None:
         cnt = 1
         while cnt != 0:
             try:
-                urlretrieve(image_url.format(cnt), f'./clawed/{id}_{cnt}.png')
+                request.urlretrieve(image_url.format(cnt), f'./clawed/{id}_{cnt}.png')
             except urllib.error.HTTPError as e:
                 assert e.code == 404
-                print(id, cnt, image_url.format(cnt))
+                print(f'Clawed: {id=}, {cnt=}')
                 cnt = -1
             cnt = cnt + 1
         id = id + 1
-        break
 
 
 if __name__ == '__main__':
