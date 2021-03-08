@@ -34,7 +34,7 @@ def claw(url: str, path='./clawed') -> None:
     id = 0
     while id <= 999 and url_available('http://' + index_url.format(id)):
         image_url = 'http://' + url.replace('//', '/') + f'{id:03d}/files/mobile/{{}}.jpg'
-        print(image_url)
+        # print(image_url)
         cnt = 1
         while cnt != 0:
             try:
