@@ -17,11 +17,19 @@ def url_available(url: str) -> bool:
     return True
 
 
-def claw(url: str) -> None:
+def claw(url: str, path='./clawed') -> None:
     if not url.endswith('index.html'):
         raise Exception('URL Wrong!')
-    os.makedirs('./clawed')
-    url = url.rstrip('000/index.html')
+    if url.find('book4') == -1:
+        raise Exception('Only support "book4" yet.')
+    if not os.path.exists(path):
+        os.makedirs(path)
+    # print(url)
+    url = url[:-11]  # '/index.html'
+    if url.endswith('mobile'):
+        url = url[:-7]
+    # print(url)
+    url = url[:-3]
     index_url = url + '{:03d}/index.html'
     id = 0
     while id <= 999 and url_available(index_url.format(id)):
@@ -30,7 +38,7 @@ def claw(url: str) -> None:
         cnt = 1
         while cnt != 0:
             try:
-                request.urlretrieve(image_url.format(cnt), f'./clawed/{id:03d}_{cnt:05d}.png')
+                request.urlretrieve(image_url.format(cnt), f'{path}/{id:03d}_{cnt:05d}.png')
             except urllib.error.HTTPError as e:
                 assert e.code == 404
                 print(f'Clawed: {id=}, {cnt=}')
