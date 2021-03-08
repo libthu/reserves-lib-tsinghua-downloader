@@ -9,6 +9,8 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 直接运行（或调用`reserves-downloader.py`中的函数`claw`），传入的参数为`阅读全文`下第一个链接（图中标黄的链接）。
 
+程序会自动从第一章开始爬取每一章的每一页，保存在`./clawed`下。
+
 目前仅支持`book4`类型（判断方法：URL中`book`后的数字）
 
 ## TODO
