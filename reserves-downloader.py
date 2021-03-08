@@ -40,4 +40,6 @@ def claw(url: str) -> None:
 
 
 if __name__ == '__main__':
-    claw('http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html')
+    url = input('INPUT URL:')
+    claw(url)
+    # claw('http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html')

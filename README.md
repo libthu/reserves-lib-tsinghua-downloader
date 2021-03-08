@@ -7,7 +7,7 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ![image-20210308204615230](https://i.loli.net/2021/03/08/zVAYweuK7cHk5os.png)
 
-调用`claw`，传入的参数为`阅读全文`下第一个链接。
+调用`reserves-downloader.py`中的函数`claw`，传入的参数为`阅读全文`下第一个链接（图中标黄的链接）。
 
 目前仅支持`book4`类型（判断方法：URL中`book`后的数字）
 
