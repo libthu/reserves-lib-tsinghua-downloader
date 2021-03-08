@@ -23,14 +23,15 @@ def mkdir(path):
         os.makedirs(path)
 
 
-def claw(url: str, path='./clawed') -> None:
+def claw(url: str) -> None:
     if not url.endswith('index.html'):
         raise Exception('URL Wrong!')
     url = url[7:-11]  # 'http://', '/index.html'
     if url.endswith('mobile'):
         url = url[:-7]
     url = url[:-3]
-    mkdir('./clawed_' + url.split('/')[-1])
+    path = './clawed_' + url.split('/')[-1]
+    mkdir(path)
     index_url = url + '{:03d}/index.html'
     id = 0
     page_num = 0
