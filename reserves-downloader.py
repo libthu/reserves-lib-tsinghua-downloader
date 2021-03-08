@@ -48,12 +48,12 @@ def claw(url: str) -> None:
         while cnt != 0:
             try:
                 request.urlretrieve(image_url.format(cnt), f'{path}/{page_num:05d}.jpg')
+                page_num = page_num + 1
             except urllib.error.HTTPError as e:
                 assert e.code == 404
                 print(f'Clawed: {id=}, {cnt=}')
                 cnt = -1
             cnt = cnt + 1
-            page_num = page_num + 1
         id = id + 1
     print(f'Total page number: {page_num}')
 
