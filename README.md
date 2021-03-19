@@ -13,7 +13,7 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ## TODO
 - 自动将图片整合为PDF（临时方案：使用学校提供的`Foxit Editor`创建PDF）
-- ~~支持`book6`~~  Done.
+- 自动设置图片的压缩率
 
 欢迎Star/Issue/PR.
 
