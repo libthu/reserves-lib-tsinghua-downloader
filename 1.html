@@ -1,0 +1,218 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>清华大学用户电子身份服务系统</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<script src="/res/ui/jquery.min.js"></script>
+<script src="/common/public/all-messages.js"></script>
+<script src="/res/ui/noty/packaged/jquery.noty.packaged.min.js"></script>
+<script src="/res/selfservice/noty.common.js"></script>
+<script src="/res/common/js/common.js"></script>
+<script src="/res/common/js/session.js"></script>
+<script src="/res/bootstrap/js/bootstrap.js"></script>
+<script src="/res/bootstrap/js/jquery.browser.js"></script>
+<script src="/res/ui/momentjs/moment.min.js"></script>
+<script src="/res/ui/loading/jquery.showLoading.min.js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="/res/bootstrap/js/html5shiv.min.js"></script>
+	<script src="/res/bootstrap/js/respond.min.js"></script>
+<![endif]-->
+<script src="/res/ui/react/classnames.js"></script>
+<!-- 
+<script src="/res/ui/react/react.min.js"></script>
+<script src="/res/ui/react/react-dom.min.js"></script>
+<script src="/res/ui/react-bootstrap/react-bootstrap.min.js"></script>
+-->
+<script src="/res/ui/react/react.js"></script>
+<script src="/res/ui/react/react-dom.js"></script>
+<script src="/res/ui/react-bootstrap/react-bootstrap.js"></script>
+
+<script src="/res/react/components.js"></script>
+<script src="/res/selfservice/browser-alert.js"></script>
+<script> $.extend(uidm, {"availableLocales":[{"locale":"zh_CN","display":"中文"},{"locale":"en_US","display":"English"}],"baseUrl":"","requestUrl":"/do/off/ui/auth/login/form/5bf6e5a699d63ff1cdb082836ebd50f9/0?/Account/LogIn","locale":"zh_CN","authenticated":false,"accountMenu":null}); </script>
+
+<script type="text/javascript">
+function keyLogin(){
+	if (event.keyCode==13){   //回车键的键值为13
+		 doLogin();  
+	}
+}
+var isCaptchaOk = false;
+//校验验证码
+function checkCaptcha(){
+	var captcha = $("#i_code").val();
+	if(captcha.length == 4){
+		var url ="/do/off/ui/auth/login/captcha/"+captcha+"/check";
+		$.ajax({
+			url : url,
+			type : "POST",
+			success : function(resp) {
+				$("#captchaIcon").removeClass("glyphicon-remove").removeClass("glyphicon-ok");
+				if(resp.result =="success"){
+					$("#captchaIcon").addClass("glyphicon-ok");
+					$("#captchaIcon").css("color","green");
+					isCaptchaOk = true;
+				}else{
+					$("#captchaIcon").addClass("glyphicon-remove");
+					$("#captchaIcon").css("color","red");
+				}
+				
+				$("#captchaIcon").removeClass("hidden");
+			}
+		});
+	}else if(captcha.length > 4){
+		$("#captchaIcon").removeClass("glyphicon-remove").removeClass("glyphicon-ok");
+		isCaptchaOk = false;
+		$("#captchaIcon").addClass("glyphicon-remove");
+		$("#captchaIcon").css("color","red");
+		$("#captchaIcon").removeClass("hidden");
+	}else if(captcha.length < 4){
+		isCaptchaOk = false;
+		if(!$("#captchaIcon").hasClass("hidden")){
+			$("#captchaIcon").addClass("hidden");
+		}
+	}
+}
+
+function refreshCaptcha() {
+	
+	
+	if(!$("#captchaIcon").hasClass("hidden")){
+		$("#captchaIcon").addClass("hidden");
+	}
+	
+	$("#captcha").attr("src", "/captcha.jpg?t="+(new Date().getTime()));
+}
+
+function doLogin() {
+	if ($("#i_user").val()=="" || $("#i_user").val()=="用户名") {
+		$("#msg_note").html("请输入用户名");
+		$("#c_note").show();
+		return;
+	}
+	if ($("#i_pass").val()=="" || $("#i_pass").val()=="密码") {
+		$("#msg_note").html("请输入密码");//请输入密码
+		$("#c_note").show();
+		return;
+	}
+	if (!$("#c_code").hasClass("hidden")) {
+		isCaptchaOk = true;
+		if ($("#i_code").val().length!=4 || !isCaptchaOk) {
+			$("#msg_note").html("您输入的验证码不正确");
+			$("#c_note").show();
+			return;
+		}
+	}
+	$("#theform").submit();
+}
+
+$(document).ready(function(){
+	if($("#i_user").val()!=""){
+		$("#i_user").attr("readonly","readonly");
+	}
+	refreshCaptcha();
+	
+	//处理检验验证码的兼容问题
+	$("#i_code").bind('propertychange', function() {
+		checkCaptcha();
+	});
+	
+	$("#i_code").bind('input', function() {
+		checkCaptcha();
+	});
+
+
+
+
+
+
+
+});
+</script>
+<link type="text/css" href="/ui/activation/css/reset.css" rel="stylesheet" />
+<link type="text/css" href="/ui/activation/css/index.css?v=1" rel="stylesheet" />
+<link type="text/css" href="/res/bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link type="text/css" href="/res/common/css/bootstrap-custom.css" rel="stylesheet" />
+<link type="text/css" href="/res/ui/loading/showLoading.css" rel="stylesheet">
+
+<link type="text/css" href="/res/bootstrap/css/signin.css"	rel="stylesheet" />
+<style type="text/css">
+@media screen and (max-width:720px) {
+	.container {
+		width: 100%;
+	}
+	.header {
+		width: 100%;
+	}
+	.jumbotron{
+		width: 100%;
+	}
+	.jumbotron h2{
+		font-size: 24px;
+	}
+	.jumbotron h3{
+		font-size: 20px;
+	}
+}
+
+@media screen and (min-width:720px) {
+	.container {
+		width: 60%;
+	}
+}
+
+</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="mainwrap2"></div>
+		</div>
+		<div class="container font">
+			<div class='jumbotron'>
+				<h2>清华大学用户电子身份服务系统</h2>
+				<h1 class="line"></h1>
+				<h3>您即将登录&nbsp;&nbsp;<i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;清华大学教参服务平台</h3>
+				<p id="c_note" style="display:none;"><img src="/ui/auth/images/error.gif" width="15" height="15" class="mr5"><span id="msg_note" class="red">您的用户名或密码不正确，请重试！</span></p>
+				<p id="c_note1" style="display:none;"><img src="/ui/auth/images/error.gif" width="15" height="15" class="mr5"><span id="msg_note1" class="red">登录失败，请重试！</span></p>
+				<form id="theform" class="form-signin" method="post" action="/do/off/ui/auth/login/check">
+					<div class="form-group">
+						<label for="inputUsername" class="sr-only">Username</label> 
+						<input type="text" id="i_user" class="form-control" value="" placeholder="工作证号、学号或网络账号"  autofocus name="i_user">
+					</div>
+					<div class="form-group">
+						<label for="inputPassword" class="sr-only">Password</label> 
+						<input type="password" id="i_pass" class="form-control" placeholder="密码" name="i_pass" onkeydown="keyLogin();">
+						<a href="/f/recovery/password/reset"><span id="helpBlock" class="help-block forgot-password">忘记密码</span></a>
+					</div>											
+					<div id="c_code" class="form-group hidden">
+						<label for="inputc" class="sr-only"></label> 
+						<input type="text" id='i_code' class="form-control" style="width: 60%;float: left;" placeholder="验证码" name="i_captcha" >
+						<img id="captcha" width="60" height="45" style="margin-left: 10px;cursor: pointer;float: left;"  class="left" onclick="refreshCaptcha()">
+						<i class="glyphicon glyphicon-refresh" style="cursor: pointer;margin-top: 15px;" onclick="refreshCaptcha()"></i>
+						<i id="captchaIcon" class="glyphicon hidden" style="margin-top: 15px;" ></i>
+					</div>
+					<div style="margin-top: 25px;">
+					<a class="btn btn-lg btn-primary btn-block" type="button" onclick='doLogin(); return false;'>登录</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row footer">
+    <div class="col-md-3"></div>
+    <div class="col-md-3"><span><i class="glyphicon glyphicon-phone-alt"></i>&nbsp;<a href="tel:01062784859">010-62784859</a> / <a href="tel:01062771940">010-62771940</a></span></div>
+    <div class="col-md-3"><span><i class="glyphicon glyphicon-envelope"></i>&nbsp;<a href="mailto:its@tsinghua.edu.cn">its@tsinghua.edu.cn</a></span></div>
+    <div class="col-md-3"></div>
+</div>
+
+	</div>
+</body>
+</html>
