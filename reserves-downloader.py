@@ -1,5 +1,4 @@
 import os
-import urllib
 import requests
 
 __author__ = 'i207M'
@@ -11,11 +10,8 @@ __author__ = 'i207M'
 
 def url_available(url: str) -> bool:
     # print(url)
-    try:
-        request.urlopen(url)
-    except urllib.error.HTTPError:
-        return False
-    return True
+    res = requests.get(url)
+    return res.status_code == 200
 
 
 def mkdir(path: str) -> None:
@@ -43,11 +39,15 @@ def claw(url: str) -> None:
     mkdir(path)
 
     # read cookies
-    with open('cookie.txt') as f:
-        _data = [v.strip() for v in f.read().splitlines()]
-        if len(_data) != 2:
-            raise Exception('Cookie data error')
-        cookie = {'ASPXAUTH': _data[0], 'ASP.NET_SessionId': _data[1]}
+    need_cookie = ('//' in url)
+    cookie = {}
+    if need_cookie:
+        with open('cookie.txt') as f:
+            _data = [v.strip() for v in f.read().splitlines()]
+            if len(_data) != 2:
+                raise Exception('Cookie data error')
+            cookie['ASPXAUTH'] = _data[0]
+            cookie['ASP.NET_SessionId'] = _data[1]
 
     # claw
     id = 0
