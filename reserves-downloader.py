@@ -1,11 +1,12 @@
 import os
 import urllib
-from urllib import request
+import requests
 
 __author__ = 'i207M'
 
 # URL_example = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
 # URL_image_example = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
+# URL_cookie_example = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
 
 def url_available(url: str) -> bool:
@@ -18,12 +19,13 @@ def url_available(url: str) -> bool:
 
 
 def mkdir(path: str) -> None:
-    # print(path)
     if not os.path.exists(path):
         os.makedirs(path)
 
 
 def url_shape(url: str) -> str:
+    if not (url.startswith('http://') and url.endswith('index.html')):
+        raise Exception('Invalid URL')
     url = url[7:-11]  # 'http://', '/index.html'
     if url.endswith('mobile'):
         url = url[:-7]
@@ -32,32 +34,42 @@ def url_shape(url: str) -> str:
 
 
 def claw(url: str) -> None:
-    if not url.endswith('index.html'):
-        raise Exception('URL Invalid!')
+
+    # modify url
     url = url_shape(url)
     index_url = 'http://' + url + '{:03d}/index.html'
     image_url_base = 'http://' + url.replace('//', '/')
     path = './clawed_' + url[url.rfind('/') + 1:]
     mkdir(path)
 
+    # read cookies
+    with open('cookie.txt') as f:
+        _data = [v.strip() for v in f.read().splitlines()]
+        if len(_data) != 2:
+            raise Exception('Cookie data error')
+        cookie = {'ASPXAUTH': _data[0], 'ASP.NET_SessionId': _data[1]}
+
+    # claw
     id = 0
     page_num = 0
     print('Start clawing...')
     while id <= 999 and url_available(index_url.format(id)):
         image_url = image_url_base + f'{id:03d}/files/mobile/{{}}.jpg'
         # print(image_url)
-        cnt = 1
-        while cnt != 0:
-            try:
-                request.urlretrieve(image_url.format(cnt), f'{path}/{page_num:05d}.jpg')
-                page_num += 1
-                print(image_url.format(cnt))
-                exit()
-            except urllib.error.HTTPError as e:
-                assert e.code == 404
-                print(f'Clawed: {id=}, {cnt=}')
-                cnt = -1
+        cnt = 0
+        while True:
+            res = requests.get(image_url.format(cnt), cookies=cookie)
+            if res.status_code != 200:
+                if res.status_code == 404:
+                    print(f'Clawed: {id=}, {cnt=}')
+                    break
+                raise Exception('HTTP error')
+            if len(res.content) < 10 * 1024:
+                raise Exception('Unable to download, perhaps due to invalid cookie')
+            with open(f'{path}/{page_num:05d}.jpg', 'wb+') as f:
+                f.write(res.content)
             cnt += 1
+            page_num += 1
         id += 1
     print(f'Total page number: {page_num}')
 
