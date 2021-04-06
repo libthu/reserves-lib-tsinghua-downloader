@@ -32,7 +32,7 @@ def url_shape(url: str) -> str:
     return url
 
 
-def cookie_init():
+def cookie_init() -> None:
     COOKIE_PATH = 'cookie.txt'
 
     if not os.path.exists(COOKIE_PATH):
@@ -74,7 +74,7 @@ def claw(url: str) -> None:
                 if ret.status_code == 404:
                     print(f'Clawed: {id=}, {cnt=}')
                     break
-                raise Exception('HTTP error')
+                raise Exception(f'HTTP error {ret.status_code}')
             # A login html (~7kB) is downloaded when cookies are invalid.
             if need_cookie and len(ret.content) < 10 * 1024:
                 raise Exception('Unable to download. Perhaps due to invalid cookies.')
