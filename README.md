@@ -26,7 +26,8 @@ Q: 运行报错`No cookie data`，怎么办？
 A: 经测试，**绝大部分教参无需`cookie`即可访问**。少数教参需要`cookie`进行身份验证，请将网站`cookie`中，`.ASPXAUTH`和`ASP.NET_SessionId`的值依次写入`cookie.txt`中，每行一个。（我将会完善获取网站`cookie`的相关教程。若急需，请与我发邮件）
 
 ## TODO
-- You tell me.
+- CI/CD
+- Async
 
 欢迎Star/Issue/PR.
 
