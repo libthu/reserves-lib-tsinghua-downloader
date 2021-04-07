@@ -1,5 +1,6 @@
 import os
 import requests
+from PIL import Image
 
 __author__ = 'i207M'
 
@@ -55,6 +56,9 @@ def claw(url: str) -> None:
     path = './clawed_' + url[url.rfind('/') + 1:]
     mkdir(path)
 
+    pdf_name = "temp.pdf"
+    pdf_path = os.path.join(path, pdf_name)
+
     # process cookies
     need_cookie = ('//' not in url)
     if need_cookie:
@@ -80,6 +84,10 @@ def claw(url: str) -> None:
                 raise Exception('Unable to download. Perhaps due to invalid cookies.')
             with open(f'{path}/{page_num:05d}.jpg', 'wb+') as f:
                 f.write(ret.content)
+
+            with Image.open(os.path.join(path, f"{page_num:05d}.jpg")) as jpg:
+                jpg.convert("RGB").save(pdf_path, append=bool(page_num))
+            
             cnt += 1
             page_num += 1
         id += 1
