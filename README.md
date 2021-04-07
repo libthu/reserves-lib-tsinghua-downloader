@@ -32,3 +32,5 @@ A: 经测试，**绝大部分教参无需`cookie`即可访问**。少数教参�
 欢迎Star/Issue/PR.
 
 *仅供学习编程，请勿用于非法用途！*
+
+更多清华常用信息/服务汇总请看[这里](https://github.com/ZenithalHourlyRate/thuservices)。
