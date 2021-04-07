@@ -85,8 +85,8 @@ def claw(url: str) -> None:
             with open(f'{path}/{page_num:05d}.jpg', 'wb+') as f:
                 f.write(ret.content)
 
-            with Image.open(os.path.join(path, f"{page_num:05d}.jpg")) as jpg:
-                jpg.convert("RGB").save(pdf_path, append=bool(page_num))
+            with Image.open(os.path.join(path, f'{page_num:05d}.jpg')) as img:
+                img.convert('RGB').save(pdf_path, append=bool(page_num))
 
             cnt += 1
             page_num += 1
