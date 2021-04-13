@@ -2,6 +2,8 @@
 Thumbs.db
 db.json
 *.log
+.github
+__pycache__
 claw*
 cookie.txt
 *.pdf

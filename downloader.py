@@ -1,5 +1,7 @@
 import os
 import requests
+from io import BytesIO
+from PIL import Image
 
 __author__ = 'i207M'
 
@@ -46,19 +48,23 @@ def cookie_init() -> None:
         cookie['ASP.NET_SessionId'] = _data[1]
 
 
-def claw(url: str) -> None:
+def claw(url: str, gen_pdf=True) -> None:
 
     # modify url
     url = url_shape(url)
     index_url = 'http://' + url + '{:03d}/index.html'
     image_url_base = 'http://' + url.replace('//', '/')
-    path = './clawed_' + url[url.rfind('/') + 1:]
+    book_id = url[url.rfind('/') + 1:]
+    path = './clawed_' + book_id
     mkdir(path)
 
     # process cookies
     need_cookie = ('//' not in url)
     if need_cookie:
         cookie_init()
+
+    # prepare pdf
+    pdf_name = book_id + '.pdf'
 
     # claw
     id = 0
@@ -67,6 +73,7 @@ def claw(url: str) -> None:
     while id <= 999 and url_available(index_url.format(id)):
         image_url = image_url_base + f'{id:03d}/files/mobile/{{}}.jpg'
         # print(image_url)
+
         cnt = 0
         while True:
             ret = requests.get(image_url.format(cnt + 1), cookies=cookie)
@@ -75,11 +82,20 @@ def claw(url: str) -> None:
                     print(f'Clawed: {id=}, {cnt=}')
                     break
                 raise Exception(f'HTTP error {ret.status_code}')
-            # A login html (~7kB) is downloaded when cookies are invalid.
+
+            # a login html (~7kB) is downloaded when cookies are invalid.
             if need_cookie and len(ret.content) < 10 * 1024:
                 raise Exception('Unable to download. Perhaps due to invalid cookies.')
+
+            # save image
             with open(f'{path}/{page_num:05d}.jpg', 'wb+') as f:
                 f.write(ret.content)
+
+            # generate pdf
+            if gen_pdf:
+                img = Image.open(BytesIO(ret.content))
+                img.convert('RGB').save(pdf_name, append=bool(page_num))
+
             cnt += 1
             page_num += 1
         id += 1
