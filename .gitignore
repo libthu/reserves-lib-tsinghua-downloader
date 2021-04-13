@@ -2,6 +2,7 @@
 Thumbs.db
 db.json
 *.log
+.github
 claw*
 cookie.txt
 *.pdf
