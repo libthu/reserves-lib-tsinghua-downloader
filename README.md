@@ -28,8 +28,7 @@ A: 使用学校提供的正版福昕编辑器可以进行OCR文字识别/图片�
 ## TODO
 
 - Command line args
-- Resume download
-- PDF generator + Bookmark
+- PDF Bookmark
 - Image resolution
 - Async
 
