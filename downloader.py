@@ -15,17 +15,17 @@ def mkdir(path: str) -> None:
         os.makedirs(path)
 
 
-def is_available(url: str, cookie={}, retry=10) -> bool:
+def is_available(url: str, cookie={}, retry=1) -> bool:
     status_code = -1
     for _ in range(retry):
         ret = requests.get(url, cookies=cookie)
         status_code = ret.status_code
-        if status_code == [200, 404]:
+        if status_code in [200, 404]:
             return status_code == 200
     raise Exception(f'HTTP error {status_code}')
 
 
-def get_image(url: str, cookie={}, retry=10) -> requests.Response:
+def get_image(url: str, cookie={}, retry=1) -> requests.Response:
     status_code = -1
     for _ in range(retry):
         ret = requests.get(url, cookies=cookie)
