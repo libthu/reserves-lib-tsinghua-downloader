@@ -50,7 +50,7 @@ def cookie_init() -> dict:
     return cookie
 
 
-def url_cut(url: str) -> str:
+def trim(url: str) -> str:
     if not (url.startswith('http://reserves.lib.tsinghua.edu.cn/') and url.endswith('index.html')):
         raise Exception('Invalid URL')
     url = url[7:-11]  # 'http://', '/index.html'
@@ -69,7 +69,7 @@ def claw(
 ) -> None:
 
     # modify url
-    url = url_cut(url)
+    url = trim(url)
     index_url = 'http://' + url + '{:03d}/index.html'
     image_url_base = 'http://' + url.replace('//', '/')
 
@@ -87,7 +87,7 @@ def claw(
 
     # process cookie
     cookie = {}
-    need_cookie = ('//' not in url)
+    need_cookie = ('//' not in url)  # magic
     if need_cookie:
         cookie = cookie_init()
 
