@@ -98,7 +98,7 @@ def claw(
         cookie = cookie_init()
 
     print('Start clawing...')
-    while chapter_id <= 999 and is_available(index_url.format(chapter_id), retry):
+    while chapter_id <= 999 and is_available(index_url.format(chapter_id), cookie, retry):
         image_url = image_url_base + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         # print(image_url)
 
