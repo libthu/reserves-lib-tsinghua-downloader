@@ -3,7 +3,7 @@ import shutil
 from argparse import ArgumentParser
 
 from utils.http import SessionTHU, get_file_list
-from utils.parallel import parallel_download
+from utils.concurrent import concurrent_download
 from utils.cookie import get_cookie
 
 __author__ = 'i207M'
@@ -22,15 +22,15 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
+def claw(url: str, gen_pdf=True, keep_img=False, retry=10, concurrent=8) -> None:
 
     print('Preparing...')
 
     url = get_base_url(url)
     book_id = url[url.rfind('/') + 1:]
 
-    img_folder_path = 'clawed_' + book_id
-    os.makedirs(img_folder_path, exist_ok=True)
+    img_dir = 'clawed_' + book_id
+    os.makedirs(img_dir, exist_ok=True)
 
     need_cookie = ('//' not in url)  # magic
     cookie = get_cookie() if need_cookie else {}
@@ -52,7 +52,7 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
-        parallel_download(page_list, session, img_folder_path, chapter_id)
+        concurrent_download(page_list, session, concurrent, img_dir, chapter_id)
         print(f'Clawed {len(page_list)} pages')
 
     print(f'Clawed {total_page} pages in total')
@@ -63,9 +63,9 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
         print(f'PDF path: {pdf_path}')
 
     if keep_img:
-        print(f'Image folder path: {img_folder_path}')
+        print(f'Image folder path: {img_dir}')
     else:
-        shutil.rmtree(img_folder_path)
+        shutil.rmtree(img_dir)
 
     print('Done')
 
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--keepimg', action='store_true', help='keep downloaded images')
     parser.add_argument('--retry', type=int, default=10, help='max number of retries')
-    parser.add_argument('--parallel', type=str, default=8, help='max number of threads')
+    parser.add_argument('--concurrent', type=str, default=8, help='max number of threads')
     args = parser.parse_args()
     url = args.url
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url, not args.no_pdf, args.keepimg, args.retry, args.parallel)
+    claw(url, not args.no_pdf, args.keepimg, args.retry, args.concurrent)
