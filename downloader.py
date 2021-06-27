@@ -2,7 +2,7 @@ import os
 import shutil
 from argparse import ArgumentParser
 
-from utils.html import get_chapter_list, get_page_list
+from utils.http import get_file_list
 from utils.parallel import parallel_download
 from utils.cookie import get_cookie
 
@@ -37,14 +37,22 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
 
     print('Fetching chapters...')
 
-    chapter_list = get_chapter_list(url)
-    # print
+    chapter_list = get_file_list(url, cookie, retry)
+    print(f'Found {len(chapter_list)} chapters')
 
     print('Clawing...')
 
     total_page = 0
-    for chapter_id in chapter_list:
-        pass
+    for chapter_url in chapter_list:
+        chapter_id = chapter_url[-12:-1]
+        print(f'Clawing chapter id: {chapter_id}')
+        page_list = [
+            'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
+                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', cookie, retry
+            )
+        ]
+        parallel_download(page_list, chapter_id)
+        print(f'Clawed {len(page_list)} pages')
 
     print(f'Clawed {total_page} pages in total')
 
