@@ -28,13 +28,19 @@ A: 使用学校提供的正版福昕编辑器可以进行OCR文字识别/图片�
 ## TODO
 
 - Command line args
-- Resume download
-- PDF generator
+- PDF Bookmark
 - Image resolution
 - Async
+
+## Contribution
+
+请查看[`contribution.md`](/contribution.md)
+
+---
 
 欢迎Star/Issue/PR.
 
 *仅供学习编程，请勿用于非法用途！*
 
 更多清华常用信息/服务汇总请看[这里](https://github.com/ZenithalHourlyRate/thuservices)。
+
