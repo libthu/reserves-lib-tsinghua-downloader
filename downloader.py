@@ -1,38 +1,44 @@
 import os
-import requests
 from io import BytesIO
-from PIL import Image
+try:
+    import requests
+    from PIL import Image
+except ModuleNotFoundError:
+    print('*' * 20)
+    print('Error: Module not found')
+    print('Please RUN: pip install -r requirements.txt')
+    print('*' * 20)
+    raise
 
 __author__ = 'i207M'
 
-# URL_example = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
-# URL_image_example = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
-# URL_cookie_example = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
-
-
-def mkdir(path: str) -> None:
-    if not os.path.exists(path):
-        os.makedirs(path)
+# example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
+# example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
+# example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
 
 def is_available(url: str, cookie={}, retry=1) -> bool:
-    status_code = -1
+    ret = None
     for _ in range(retry):
         ret = requests.get(url, cookies=cookie)
-        status_code = ret.status_code
-        if status_code in [200, 404]:
-            return status_code == 200
-    raise Exception(f'HTTP error {status_code}')
+        if ret.status_code in [200, 404]:
+            return ret.status_code == 200
+    print('*' * 20)
+    print('Error: Bad Internet connection')
+    print('*' * 20)
+    ret.raise_for_status()
 
 
 def get_image(url: str, cookie={}, retry=1) -> requests.Response:
-    status_code = -1
+    ret = None
     for _ in range(retry):
         ret = requests.get(url, cookies=cookie)
-        status_code = ret.status_code
-        if status_code in [200, 404]:
+        if ret.status_code in [200, 404]:
             return ret
-    raise Exception(f'HTTP error {status_code}')
+    print('*' * 20)
+    print('Error: Bad Internet connection')
+    print('*' * 20)
+    ret.raise_for_status()
 
 
 def cookie_init() -> dict:
@@ -40,13 +46,13 @@ def cookie_init() -> dict:
     cookie = {}
 
     if not os.path.exists(COOKIE_PATH):
-        raise Exception(f'File not found: "{COOKIE_PATH}"\nSee README.md for help.')
+        raise FileNotFoundError(f'No such file: "{COOKIE_PATH}"\nSee README.md for help.')
     with open(COOKIE_PATH) as f:
-        _data = [v.strip() for v in f.read().splitlines()]
-        if len(_data) != 2:
-            raise Exception('Cookie data error: too many or too few lines')
-        cookie['.ASPXAUTH'] = _data[0]
-        cookie['ASP.NET_SessionId'] = _data[1]
+        data = [v.strip() for v in f.read().splitlines()]
+        if len(data) != 2:
+            raise Exception(f'Too many or too few lines in "{COOKIE_PATH}"')
+        cookie['.ASPXAUTH'] = data[0]
+        cookie['ASP.NET_SessionId'] = data[1]
     return cookie
 
 
@@ -78,7 +84,7 @@ def claw(
     pdf_name = book_id + '.pdf'
     path = './clawed_' + book_id
     if save_img:
-        mkdir(path)
+        os.makedirs(path, exist_ok=True)
 
     chapter_id = 0
     page_num = 0
@@ -92,7 +98,7 @@ def claw(
         cookie = cookie_init()
 
     print('Start clawing...')
-    while chapter_id <= 999 and is_available(index_url.format(chapter_id), retry):
+    while chapter_id <= 999 and is_available(index_url.format(chapter_id), cookie, retry):
         image_url = image_url_base + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         # print(image_url)
 
