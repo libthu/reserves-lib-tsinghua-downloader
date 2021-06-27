@@ -1,18 +1,20 @@
 import os
-import requests
 from io import BytesIO
-from PIL import Image
+try:
+    import requests
+    from PIL import Image
+except ModuleNotFoundError:
+    print('*' * 20)
+    print('Error: Module Not Found')
+    print('Please RUN: pip install -r requirements.txt')
+    print('*' * 20)
+    raise
 
 __author__ = 'i207M'
 
-# URL_example = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
-# URL_image_example = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
-# URL_cookie_example = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
-
-
-def mkdir(path: str) -> None:
-    if not os.path.exists(path):
-        os.makedirs(path)
+# example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
+# example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
+# example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
 
 def is_available(url: str, cookie={}, retry=1) -> bool:
@@ -78,7 +80,7 @@ def claw(
     pdf_name = book_id + '.pdf'
     path = './clawed_' + book_id
     if save_img:
-        mkdir(path)
+        os.makedirs(path, exist_ok=True)
 
     chapter_id = 0
     page_num = 0
