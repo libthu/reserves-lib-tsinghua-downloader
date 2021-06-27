@@ -1,5 +1,6 @@
 import os
-from io import BytesIO
+import shutil
+from argparse import ArgumentParser
 
 from utils.html import get_chapter_list, get_page_list
 from utils.parallel import parallel_download
@@ -12,18 +13,13 @@ __author__ = 'i207M'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
 
-def trim(url: str) -> str:
-    if not (url.startswith('http://reserves.lib.tsinghua.edu.cn/') and url.endswith('index.html')):
-        raise Exception('Invalid URL')
-    url = url[7:-11]  # 'http://', '/index.html'
-    if url.endswith('mobile'):
-        url = url[:-7]
-    url = url[:-3]  # '000'
-    return url
-
-
 def get_base_url(url: str) -> str:
-    pass
+    if not (url.startswith('http://reserves.lib.tsinghua.edu.cn/') and url.endswith('/index.html')):
+        raise Exception('Invalid URL')
+    url = url[7:]  # 'http://'
+    url = url.replace('//', '/')
+    url = url[:url.find('book') + 15]
+    return 'http://' + url
 
 
 def claw(url: str, save_pdf=True, keep_img=True, retry=10, parallel=8) -> None:
@@ -39,7 +35,7 @@ def claw(url: str, save_pdf=True, keep_img=True, retry=10, parallel=8) -> None:
     need_cookie = ('//' not in url)  # magic
     cookie = get_cookie() if need_cookie else {}
 
-    print('Fetching chapters')
+    print('Fetching chapters...')
 
     chapter_list = get_chapter_list(url)
     # print
@@ -50,16 +46,30 @@ def claw(url: str, save_pdf=True, keep_img=True, retry=10, parallel=8) -> None:
     for chapter_id in chapter_list:
         pass
 
-    if not keep_img:
-        pass
+    print(f'Clawed {total_page} pages in total')
 
-    print('Finished')
-    print(f'Clawed {total_page} pages')
-    print(f'PDF path: {pdf_path}')
+    if save_pdf:
+        print('Generating PDF...')
+        pdf_path = book_id + '.pdf'
+        print(f'PDF path: {pdf_path}')
+
     if keep_img:
         print(f'Image folder path: {img_folder_path}')
+    else:
+        shutil.rmtree(img_folder_path)
+
+    print('Done')
 
 
 if __name__ == '__main__':
-    url = input('INPUT URL:')
+    parser = ArgumentParser(
+        description='See README.md for help; '
+        'Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader'
+    )
+    parser.add_argument('--url', type=str, help='input target URL')
+    args = parser.parse_args()
+    url = args.url
+
+    if url is None:
+        url = input('INPUT URL:')
     claw(url)

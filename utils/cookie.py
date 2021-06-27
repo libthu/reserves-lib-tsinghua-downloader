@@ -1,4 +1,7 @@
-def cookie_init():
+import os
+
+
+def get_cookie():
     COOKIE_PATH = 'cookie.txt'
     cookie = {}
 
