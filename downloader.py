@@ -1,5 +1,6 @@
 import os
 from io import BytesIO
+from html.parser import HTMLParser
 try:
     import requests
     from PIL import Image
@@ -17,28 +18,28 @@ __author__ = 'i207M'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
 
-def is_available(url: str, cookie={}, retry=1) -> bool:
-    ret = None
-    for _ in range(retry):
-        ret = requests.get(url, cookies=cookie)
-        if ret.status_code in [200, 404]:
-            return ret.status_code == 200
-    print('*' * 20)
-    print('Error: Bad Internet connection')
-    print('*' * 20)
-    ret.raise_for_status()
+# def is_available(url: str, cookie={}, retry=1) -> bool:
+#     ret = None
+#     for _ in range(retry):
+#         ret = requests.get(url, cookies=cookie)
+#         if ret.status_code in [200, 404]:
+#             return ret.status_code == 200
+#     print('*' * 20)
+#     print('Error: Bad Internet connection')
+#     print('*' * 20)
+#     ret.raise_for_status()
 
 
-def get_image(url: str, cookie={}, retry=1) -> requests.Response:
-    ret = None
-    for _ in range(retry):
-        ret = requests.get(url, cookies=cookie)
-        if ret.status_code in [200, 404]:
-            return ret
-    print('*' * 20)
-    print('Error: Bad Internet connection')
-    print('*' * 20)
-    ret.raise_for_status()
+# def get_image(url: str, cookie={}, retry=1) -> requests.Response:
+#     ret = None
+#     for _ in range(retry):
+#         ret = requests.get(url, cookies=cookie)
+#         if ret.status_code in [200, 404]:
+#             return ret
+#     print('*' * 20)
+#     print('Error: Bad Internet connection')
+#     print('*' * 20)
+#     ret.raise_for_status()
 
 
 def cookie_init() -> dict:
@@ -69,7 +70,6 @@ def trim(url: str) -> str:
 def claw(
     url: str,
     retry=10,
-    resume=None,
     make_pdf=True,
     save_img=False,
 ) -> None:
@@ -88,8 +88,6 @@ def claw(
 
     chapter_id = 0
     page_num = 0
-    if resume is not None:
-        chapter_id = resume['chapter_id']
 
     # process cookie
     cookie = {}
@@ -103,13 +101,11 @@ def claw(
         # print(image_url)
 
         cnt = 0
-        if resume is not None and chapter_id == resume['chapter_id']:
-            cnt = resume['cnt']
         while True:
             try:
                 ret = get_image(image_url.format(cnt + 1), cookie, retry)
             except Exception:
-                # HTTP error occurred, print variables for resuming
+                # HTTP error occurred
                 print('*' * 10)
                 print('Network error occurred')
                 print(f'Clawed page number: {page_num}\n{chapter_id=}\n{cnt=}')
