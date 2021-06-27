@@ -5,7 +5,7 @@ try:
     from PIL import Image
 except ModuleNotFoundError:
     print('*' * 20)
-    print('Error: Module Not Found')
+    print('Error: Module not found')
     print('Please RUN: pip install -r requirements.txt')
     print('*' * 20)
     raise
@@ -18,23 +18,27 @@ __author__ = 'i207M'
 
 
 def is_available(url: str, cookie={}, retry=1) -> bool:
-    status_code = -1
+    ret = None
     for _ in range(retry):
         ret = requests.get(url, cookies=cookie)
-        status_code = ret.status_code
-        if status_code in [200, 404]:
-            return status_code == 200
-    raise Exception(f'HTTP error {status_code}')
+        if ret.status_code in [200, 404]:
+            return ret.status_code == 200
+    print('*' * 20)
+    print('Error: Bad Internet connection')
+    print('*' * 20)
+    ret.raise_for_status()
 
 
 def get_image(url: str, cookie={}, retry=1) -> requests.Response:
-    status_code = -1
+    ret = None
     for _ in range(retry):
         ret = requests.get(url, cookies=cookie)
-        status_code = ret.status_code
-        if status_code in [200, 404]:
+        if ret.status_code in [200, 404]:
             return ret
-    raise Exception(f'HTTP error {status_code}')
+    print('*' * 20)
+    print('Error: Bad Internet connection')
+    print('*' * 20)
+    ret.raise_for_status()
 
 
 def cookie_init() -> dict:
@@ -42,13 +46,13 @@ def cookie_init() -> dict:
     cookie = {}
 
     if not os.path.exists(COOKIE_PATH):
-        raise Exception(f'File not found: "{COOKIE_PATH}"\nSee README.md for help.')
+        raise FileNotFoundError(f'No such file: "{COOKIE_PATH}"\nSee README.md for help.')
     with open(COOKIE_PATH) as f:
-        _data = [v.strip() for v in f.read().splitlines()]
-        if len(_data) != 2:
-            raise Exception('Cookie data error: too many or too few lines')
-        cookie['.ASPXAUTH'] = _data[0]
-        cookie['ASP.NET_SessionId'] = _data[1]
+        data = [v.strip() for v in f.read().splitlines()]
+        if len(data) != 2:
+            raise Exception(f'Too many or too few lines in "{COOKIE_PATH}"')
+        cookie['.ASPXAUTH'] = data[0]
+        cookie['ASP.NET_SessionId'] = data[1]
     return cookie
 
 
