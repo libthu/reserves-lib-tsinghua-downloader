@@ -2,7 +2,7 @@ import os
 import shutil
 from argparse import ArgumentParser
 
-from utils.http import get_file_list
+from utils.http import SessionTHU, get_file_list
 from utils.parallel import parallel_download
 from utils.cookie import get_cookie
 
@@ -34,10 +34,11 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
 
     need_cookie = ('//' not in url)  # magic
     cookie = get_cookie() if need_cookie else {}
+    session = SessionTHU(cookie, retry)
 
     print('Fetching chapters...')
 
-    chapter_list = get_file_list(url, cookie, retry)
+    chapter_list = get_file_list(url, session)
     print(f'Found {len(chapter_list)} chapters')
 
     print('Clawing...')
@@ -48,10 +49,10 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
         print(f'Clawing chapter id: {chapter_id}')
         page_list = [
             'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
-                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', cookie, retry
+                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
-        parallel_download(page_list, chapter_id)
+        parallel_download(page_list, session, img_folder_path, chapter_id)
         print(f'Clawed {len(page_list)} pages')
 
     print(f'Clawed {total_page} pages in total')
