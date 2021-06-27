@@ -1,5 +1,5 @@
 import os
-import shutil
+import time
 from argparse import ArgumentParser
 
 from utils.http import SessionTHU, get_file_list
@@ -45,6 +45,7 @@ def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None
     for chapter_url in chapter_list:
         chapter_id = chapter_url[-12:-1]
         print(f'Clawing chapter id: {chapter_id}')
+        time_usage = time.time()
         page_list = [
             'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
@@ -52,9 +53,12 @@ def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None
         ]
         img_list = []
         concurrent_download(page_list, img_list, session, concurrent)
+        assert len(page_list) == len(img_list)
         total_page += len(img_list)
         imgs[chapter_id] = img_list
-        print(f'Clawed {len(img_list)} pages')
+
+        time_usage = time.time() - time_usage
+        print(f'Clawed {len(img_list)} pages, time usage: {time_usage: .3f}s')
 
     print(f'Clawed {total_page} pages in total')
 
@@ -66,6 +70,10 @@ def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None
     if save_img:
         img_dir = 'clawed_' + book_id
         os.makedirs(img_dir, exist_ok=True)
+        for chapter_id, img_list in imgs.items():
+            for i, img in enumerate(img_list):
+                with open(img_dir + f'/{chapter_id}_{i: 04d}.jpg', 'wb') as f:
+                    f.write(img)
         print(f'Image folder path: {img_dir}')
 
     print('Done')
