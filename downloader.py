@@ -22,7 +22,7 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def claw(url: str, save_pdf=True, keep_img=True, retry=10, parallel=8) -> None:
+def claw(url: str, gen_pdf=True, keep_img=False, retry=10, parallel=8) -> None:
 
     print('Preparing...')
 
@@ -48,7 +48,7 @@ def claw(url: str, save_pdf=True, keep_img=True, retry=10, parallel=8) -> None:
 
     print(f'Clawed {total_page} pages in total')
 
-    if save_pdf:
+    if gen_pdf:
         print('Generating PDF...')
         pdf_path = book_id + '.pdf'
         print(f'PDF path: {pdf_path}')
@@ -67,9 +67,13 @@ if __name__ == '__main__':
         'Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader'
     )
     parser.add_argument('--url', type=str, help='input target URL')
+    parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
+    parser.add_argument('--keepimg', action='store_true', help='keep downloaded images')
+    parser.add_argument('--retry', type=int, default=10, help='max number of retries')
+    parser.add_argument('--parallel', type=str, default=8, help='max number of threads')
     args = parser.parse_args()
     url = args.url
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url)
+    claw(url, not args.no_pdf, args.keepimg, args.retry, args.parallel)
