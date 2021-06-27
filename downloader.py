@@ -1,60 +1,15 @@
 import os
 from io import BytesIO
-from html.parser import HTMLParser
-try:
-    import requests
-    from PIL import Image
-except ModuleNotFoundError:
-    print('*' * 20)
-    print('Error: Module not found')
-    print('Please RUN: pip install -r requirements.txt')
-    print('*' * 20)
-    raise
+
+from utils.html import get_chapter_list, get_page_list
+from utils.parallel import parallel_download
+from utils.cookie import get_cookie
 
 __author__ = 'i207M'
 
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
 # example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
-
-
-# def is_available(url: str, cookie={}, retry=1) -> bool:
-#     ret = None
-#     for _ in range(retry):
-#         ret = requests.get(url, cookies=cookie)
-#         if ret.status_code in [200, 404]:
-#             return ret.status_code == 200
-#     print('*' * 20)
-#     print('Error: Bad Internet connection')
-#     print('*' * 20)
-#     ret.raise_for_status()
-
-
-# def get_image(url: str, cookie={}, retry=1) -> requests.Response:
-#     ret = None
-#     for _ in range(retry):
-#         ret = requests.get(url, cookies=cookie)
-#         if ret.status_code in [200, 404]:
-#             return ret
-#     print('*' * 20)
-#     print('Error: Bad Internet connection')
-#     print('*' * 20)
-#     ret.raise_for_status()
-
-
-def cookie_init() -> dict:
-    COOKIE_PATH = 'cookie.txt'
-    cookie = {}
-
-    if not os.path.exists(COOKIE_PATH):
-        raise FileNotFoundError(f'No such file: "{COOKIE_PATH}"\nSee README.md for help.')
-    with open(COOKIE_PATH) as f:
-        data = [v.strip() for v in f.read().splitlines()]
-        if len(data) != 2:
-            raise Exception(f'Too many or too few lines in "{COOKIE_PATH}"')
-        cookie['.ASPXAUTH'] = data[0]
-        cookie['ASP.NET_SessionId'] = data[1]
-    return cookie
 
 
 def trim(url: str) -> str:
@@ -67,72 +22,42 @@ def trim(url: str) -> str:
     return url
 
 
-def claw(
-    url: str,
-    retry=10,
-    make_pdf=True,
-    save_img=False,
-) -> None:
+def get_base_url(url: str) -> str:
+    pass
 
-    # modify url
-    url = trim(url)
-    index_url = 'http://' + url + '{:03d}/index.html'
-    image_url_base = 'http://' + url.replace('//', '/')
 
-    # prepare variables
+def claw(url: str, save_pdf=True, keep_img=True, retry=10, parallel=8) -> None:
+
+    print('Preparing...')
+
+    url = get_base_url(url)
     book_id = url[url.rfind('/') + 1:]
-    pdf_name = book_id + '.pdf'
-    path = './clawed_' + book_id
-    if save_img:
-        os.makedirs(path, exist_ok=True)
 
-    chapter_id = 0
-    page_num = 0
+    img_folder_path = 'clawed_' + book_id
+    os.makedirs(img_folder_path, exist_ok=True)
 
-    # process cookie
-    cookie = {}
     need_cookie = ('//' not in url)  # magic
-    if need_cookie:
-        cookie = cookie_init()
+    cookie = get_cookie() if need_cookie else {}
 
-    print('Start clawing...')
-    while chapter_id <= 999 and is_available(index_url.format(chapter_id), cookie, retry):
-        image_url = image_url_base + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
-        # print(image_url)
+    print('Fetching chapters')
 
-        cnt = 0
-        while True:
-            try:
-                ret = get_image(image_url.format(cnt + 1), cookie, retry)
-            except Exception:
-                # HTTP error occurred
-                print('*' * 10)
-                print('Network error occurred')
-                print(f'Clawed page number: {page_num}\n{chapter_id=}\n{cnt=}')
-                print('*' * 10)
-                raise
+    chapter_list = get_chapter_list(url)
+    # print
 
-            # finished clawing a chapter
-            if ret.status_code == 404:
-                print(f'Clawed: {chapter_id=}, {cnt=}')
-                break
+    print('Clawing...')
 
-            # a login html (~7kB) is downloaded when cookie is invalid.
-            if need_cookie and len(ret.content) < 10 * 1024:
-                raise Exception('Invalid cookie')
+    total_page = 0
+    for chapter_id in chapter_list:
+        pass
 
-            if save_img:
-                with open(f'{path}/{page_num:05d}.jpg', 'wb+') as f:
-                    f.write(ret.content)
+    if not keep_img:
+        pass
 
-            if make_pdf:
-                img = Image.open(BytesIO(ret.content))
-                img.convert('RGB').save(pdf_name, append=bool(page_num))
-
-            cnt += 1
-            page_num += 1
-        chapter_id += 1
-    print(f'Total page number: {page_num}')
+    print('Finished')
+    print(f'Clawed {total_page} pages')
+    print(f'PDF path: {pdf_path}')
+    if keep_img:
+        print(f'Image folder path: {img_folder_path}')
 
 
 if __name__ == '__main__':
