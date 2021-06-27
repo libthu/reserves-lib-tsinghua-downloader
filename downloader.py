@@ -22,15 +22,12 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def claw(url: str, gen_pdf=True, keep_img=False, retry=10, concurrent=8) -> None:
+def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None:
 
     print('Preparing...')
 
     url = get_base_url(url)
-    book_id = url[url.rfind('/') + 1:]
-
-    img_dir = 'clawed_' + book_id
-    os.makedirs(img_dir, exist_ok=True)
+    book_id = url[url[:-1].rfind('/') + 1:-1]
 
     need_cookie = ('//' not in url)  # magic
     cookie = get_cookie() if need_cookie else {}
@@ -44,6 +41,7 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, concurrent=8) -> None
     print('Clawing...')
 
     total_page = 0
+    imgs = {}
     for chapter_url in chapter_list:
         chapter_id = chapter_url[-12:-1]
         print(f'Clawing chapter id: {chapter_id}')
@@ -52,8 +50,11 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, concurrent=8) -> None
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
-        concurrent_download(page_list, session, concurrent, img_dir, chapter_id)
-        print(f'Clawed {len(page_list)} pages')
+        img_list = []
+        concurrent_download(page_list, img_list, session, concurrent)
+        total_page += len(img_list)
+        imgs[chapter_id] = img_list
+        print(f'Clawed {len(img_list)} pages')
 
     print(f'Clawed {total_page} pages in total')
 
@@ -62,10 +63,10 @@ def claw(url: str, gen_pdf=True, keep_img=False, retry=10, concurrent=8) -> None
         pdf_path = book_id + '.pdf'
         print(f'PDF path: {pdf_path}')
 
-    if keep_img:
+    if save_img:
+        img_dir = 'clawed_' + book_id
+        os.makedirs(img_dir, exist_ok=True)
         print(f'Image folder path: {img_dir}')
-    else:
-        shutil.rmtree(img_dir)
 
     print('Done')
 
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     )
     parser.add_argument('--url', type=str, help='input target URL')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
-    parser.add_argument('--keepimg', action='store_true', help='keep downloaded images')
+    parser.add_argument('--saveimg', action='store_true', help='keep downloaded images')
     parser.add_argument('--retry', type=int, default=10, help='max number of retries')
     parser.add_argument('--concurrent', type=str, default=8, help='max number of threads')
     args = parser.parse_args()
@@ -85,4 +86,4 @@ if __name__ == '__main__':
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url, not args.no_pdf, args.keepimg, args.retry, args.concurrent)
+    claw(url, not args.no_pdf, args.saveimg, args.retry, args.concurrent)

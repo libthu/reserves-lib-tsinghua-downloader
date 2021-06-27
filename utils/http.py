@@ -6,6 +6,10 @@ class SessionTHU:
     def __init__(self, cookie, retry) -> None:
         self.s = requests.session()
         self.s.cookies = requests.utils.cookiejar_from_dict(cookie)
+        self.s.headers.update({
+            'user-agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+        })
         self.retry = retry
 
     def GET(self, url: str) -> requests.Response:
