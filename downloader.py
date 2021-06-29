@@ -85,12 +85,14 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
         assert len(download_list) == len(img_list)
 
         total_page += len(img_list)
-        imgs[chapter_id] = [
-            open(f'{img_dir}/{chapter_id}_{f}', 'rb').read() for f in resumed[chapter_id]
-        ] + img_list
         time_usage = time.time() - time_usage
-        if resumed:
+        if resume:
+            imgs[chapter_id] = [
+                open(f'{img_dir}/{chapter_id}_{f}', 'rb').read() for f in resumed[chapter_id]
+            ] + img_list
             print(f'Resumed {len(page_list)-len(download_list)} pages')
+        else:
+            imgs[chapter_id] = img_list
         print(f'Clawed {len(img_list)} pages, time usage: {time_usage: .3f}s')
         print('*' * 20)
 
