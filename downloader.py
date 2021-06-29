@@ -12,6 +12,7 @@ from utils.pdf import generate_pdf
 __author__ = 'i207M'
 
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
+# example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/mobile/index.html'
 # example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
@@ -51,13 +52,14 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
     if resume:
         print('Resuming...')
         resumed_list = [f for f in os.listdir(img_dir) if os.path.isfile(f'{img_dir}/{f}')]
+        resumed_list.sort()
         resumed = {}
         for chapter_url in chapter_list:
             chapter_id = chapter_url[-12:-1]
-            resumed[chapter_id] = set()
+            resumed[chapter_id] = []
         for f in resumed_list:
             chapter_id, file_name = f.split('_')
-            resumed[chapter_id].update(file_name)
+            resumed[chapter_id].append(file_name)
 
     print('Clawing...')
 
@@ -72,9 +74,9 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
-        if resumed:
-            resumed_dict = resumed[chapter_id]
-            download_list = [url for url in page_list if url[url.rfind('/') + 1:] in resumed_dict]
+        if resume:
+            resumed_set = set(resumed[chapter_id])
+            download_list = [url for url in page_list if url[url.rfind('/') + 1:] in resumed_set]
         else:
             download_list = page_list
 
@@ -83,7 +85,9 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
         assert len(download_list) == len(img_list)
 
         total_page += len(img_list)
-        imgs[chapter_id] = img_list
+        imgs[chapter_id] = [
+            open(f'{img_dir}/{chapter_id}_{f}', 'rb').read() for f in resumed[chapter_id]
+        ] + img_list
         time_usage = time.time() - time_usage
         if resumed:
             print(f'Resumed {len(page_list)-len(download_list)} pages')
