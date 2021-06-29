@@ -2,7 +2,9 @@ import os
 import time
 from argparse import ArgumentParser
 
-from utils.http import SessionTHU, get_file_list
+import requests
+
+from utils.http import get_file_list
 from utils.concurrent import concurrent_download
 from utils.cookie import get_cookie
 from utils.pdf import generate_pdf
@@ -23,7 +25,7 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None:
+def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> None:
 
     print('Preparing...')
 
@@ -32,12 +34,21 @@ def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None
 
     need_cookie = ('//' not in url)  # magic
     cookie = get_cookie() if need_cookie else {}
-    session = SessionTHU(cookie, retry)
+
+    session = requests.session()
+    session.cookies = requests.utils.cookiejar_from_dict(cookie)
+    session.headers.update({
+        'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+    })
 
     print('Fetching chapters...')
 
     chapter_list = get_file_list(url, session)
     print(f'Found {len(chapter_list)} chapters')
+
+    if resume:
+        print('Resuming...')
 
     print('Clawing...')
 
@@ -88,12 +99,12 @@ if __name__ == '__main__':
     )
     parser.add_argument('--url', type=str, help='input target URL')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
-    parser.add_argument('--saveimg', action='store_true', help='keep downloaded images')
-    parser.add_argument('--retry', type=int, default=10, help='max number of retries')
+    parser.add_argument('--saveimg', action='store_true', help='save downloaded images')
     parser.add_argument('--concurrent', type=str, default=8, help='max number of threads')
+    parser.add_argument('--resume', action='store_true', help='skip saved images')
     args = parser.parse_args()
     url = args.url
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url, not args.no_pdf, args.saveimg, args.retry, args.concurrent)
+    claw(url, not args.no_pdf, args.saveimg, args.concurrent, args.resume)
