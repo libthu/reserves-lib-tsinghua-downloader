@@ -11,7 +11,7 @@ from utils.pdf import generate_pdf
 
 __author__ = 'i207M'
 
-# example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/index.html'
+# example_URL = 'http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/index.html'
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/mobile/index.html'
 # example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
@@ -95,6 +95,8 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
         print('*' * 20)
 
     print(f'Clawed {total_page} pages in total')
+
+    # TODO: image resize
 
     if gen_pdf:
         print('Generating PDF...')

@@ -1,17 +1,10 @@
-from io import BytesIO
-from PIL import Image
+import operator
+from functools import reduce
+
+import img2pdf
 
 
 def generate_pdf(path: str, imgs) -> None:
-    file = BytesIO()
-    cnt = 0
-    for img_list in imgs.values():
-        for bin in img_list:
-            img = Image.open(BytesIO(bin))
-            img.convert('RGB').save(file, format='pdf', append=True)
-            cnt = cnt + 1
-            if cnt % 100 == 0:
-                print(cnt)
-    file.seek(0)
+    img_list = reduce(operator.add, imgs.values())
     with open(path, 'wb') as f:
-        f.write(file.read())
+        f.write(img2pdf.convert(img_list))
