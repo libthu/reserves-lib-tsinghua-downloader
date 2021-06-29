@@ -31,6 +31,7 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
 
     url = get_base_url(url)
     book_id = url[url[:-1].rfind('/') + 1:-1]
+    img_dir = 'clawed_' + book_id
 
     need_cookie = ('//' not in url)  # magic
     cookie = get_cookie() if need_cookie else {}
@@ -49,6 +50,14 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
 
     if resume:
         print('Resuming...')
+        resumed_list = [f for f in os.listdir(img_dir) if os.path.isfile(f'{img_dir}/{f}')]
+        resumed = {}
+        for chapter_url in chapter_list:
+            chapter_id = chapter_url[-12:-1]
+            resumed[chapter_id] = set()
+        for f in resumed_list:
+            chapter_id, file_name = f.split('_')
+            resumed[chapter_id].update(file_name)
 
     print('Clawing...')
 
@@ -63,14 +72,23 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
+        if resumed:
+            resumed_dict = resumed[chapter_id]
+            download_list = [url for url in page_list if url[url.rfind('/') + 1:] in resumed_dict]
+        else:
+            download_list = page_list
+
         img_list = []
-        concurrent_download(page_list, img_list, session, concurrent)
-        assert len(page_list) == len(img_list)
+        concurrent_download(download_list, img_list, session, concurrent)
+        assert len(download_list) == len(img_list)
+
         total_page += len(img_list)
         imgs[chapter_id] = img_list
-
         time_usage = time.time() - time_usage
+        if resumed:
+            print(f'Resumed {len(page_list)-len(download_list)} pages')
         print(f'Clawed {len(img_list)} pages, time usage: {time_usage: .3f}s')
+        print('*' * 20)
 
     print(f'Clawed {total_page} pages in total')
 
@@ -81,11 +99,10 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
         print(f'PDF path: {pdf_path}')
 
     if save_img:
-        img_dir = 'clawed_' + book_id
         os.makedirs(img_dir, exist_ok=True)
         for chapter_id, img_list in imgs.items():
             for i, img in enumerate(img_list):
-                with open(img_dir + f'/{chapter_id}_{i: 04d}.jpg', 'wb') as f:
+                with open(img_dir + f'/{chapter_id}_{i:04d}.jpg', 'wb') as f:
                     f.write(img)
         print(f'Image folder path: {img_dir}')
 
