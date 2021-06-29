@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 from utils.http import SessionTHU, get_file_list
 from utils.concurrent import concurrent_download
 from utils.cookie import get_cookie
+from utils.pdf import generate_pdf
 
 __author__ = 'i207M'
 
@@ -65,6 +66,7 @@ def claw(url: str, gen_pdf=True, save_img=False, retry=10, concurrent=8) -> None
     if gen_pdf:
         print('Generating PDF...')
         pdf_path = book_id + '.pdf'
+        generate_pdf(pdf_path, imgs)
         print(f'PDF path: {pdf_path}')
 
     if save_img:
