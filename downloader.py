@@ -126,7 +126,9 @@ if __name__ == '__main__':
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--saveimg', action='store_true', help='save downloaded images')
     parser.add_argument('--concurrent', type=str, default=8, help='max number of threads')
-    parser.add_argument('--resume', action='store_true', help='skip saved images')
+    parser.add_argument(
+        '--resume', action='store_true', help='skip saved images (only works for some situations)'
+    )
     args = parser.parse_args()
     url = args.url
 
