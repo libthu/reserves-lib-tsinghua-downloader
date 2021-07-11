@@ -152,13 +152,15 @@ if __name__ == '__main__':
         print('Thanks for using. Please see README.md for help.')
         print('Try running "downloader -h" in terminal for advanced settings.')
         print('*' * 20)
-        url = input('INPUT URL:')
-        quality = input('Reduce file size? [y/N]')
+        url = input('INPUT URL: ')
+        quality = input('Reduce file size? [y/N] ')
         if quality != '' and strtobool(quality):
-            quality = input('Please input quality ratio in [1, 96] (85 by recommendation)')
+            quality = input('Please input quality ratio in [1, 96] (85 by recommendation): ')
             if quality == '':
                 quality = 85
             quality = int(quality)
+        elif quality == '':
+            quality = 96
 
     if not (1 <= quality <= 96):
         raise ValueError('--quality [1, 96] out of bounds')
