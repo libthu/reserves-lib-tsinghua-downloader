@@ -8,6 +8,7 @@ from utils.http import get_file_list
 from utils.concurrent import concurrent_download
 from utils.cookie import get_cookie
 from utils.pdf import generate_pdf
+from utils.image import resize
 
 __author__ = 'i207M'
 
@@ -90,14 +91,6 @@ def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) 
     else:
         imgs = claw(url)
 
-    # TODO: image resize
-
-    if gen_pdf:
-        print('Generating PDF...')
-        pdf_path = book_id + '.pdf'
-        generate_pdf(pdf_path, imgs)
-        print(f'PDF path: {pdf_path}')
-
     if save_img:
         print('Saving images...')
         os.makedirs(img_dir, exist_ok=True)
@@ -106,6 +99,12 @@ def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) 
                 with open(img_dir + f'/{chapter_id}_{i:04d}.jpg', 'wb') as f:
                     f.write(img)
         print(f'Image folder path: {img_dir}')
+
+    if gen_pdf:
+        print('Generating PDF...')
+        pdf_path = book_id + '.pdf'
+        generate_pdf(pdf_path, imgs)
+        print(f'PDF path: {pdf_path}')
 
     print('Done')
 
