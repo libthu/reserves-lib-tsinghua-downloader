@@ -27,7 +27,7 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> None:
+def claw(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> None:
 
     print('Preparing...')
 
@@ -125,14 +125,12 @@ if __name__ == '__main__':
     )
     parser.add_argument('--url', type=str, help='input target URL')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
-    parser.add_argument('--saveimg', action='store_true', help='save downloaded images')
-    parser.add_argument('--concurrent', type=str, default=8, help='max number of threads')
-    parser.add_argument(
-        '--resume', action='store_true', help='skip saved images (only works for some situations)'
-    )
+    parser.add_argument('--no-img', action='store_true', help='disable saving images')
+    parser.add_argument('--concurrent', type=str, default=6, help='max number of threads')
+    parser.add_argument('--resume', action='store_true', help='skip downloading images (for testing)')
     args = parser.parse_args()
     url = args.url
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url, not args.no_pdf, args.saveimg, int(args.concurrent), args.resume)
+    claw(url, not args.no_pdf, not args.no_img, int(args.concurrent), args.resume)
