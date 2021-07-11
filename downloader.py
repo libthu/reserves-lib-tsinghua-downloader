@@ -23,10 +23,10 @@ __author__ = 'i207M'
 def get_base_url(url: str) -> str:
     if not (url.startswith('http://reserves.lib.tsinghua.edu.cn/') and url.endswith('/index.html')):
         raise Exception('Invalid URL')
-    url = url[7:]  # 'http://'
-    url = url.replace('//', '/')
-    url = url[:url.find('book') + 15]
-    return 'http://' + url
+    url = url[:-11]  # '/index.html'
+    if url.endswith('mobile'):
+        url = url[:-7]
+    return url
 
 
 def claw_book4(url: str, concurrent: int, session: requests.Session):
@@ -54,10 +54,10 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
         img_list = []
         concurrent_download(page_list, img_list, session, concurrent)
 
+        imgs[chapter_id] = img_list
         time_usage = time.time() - time_usage
         total_time += time_usage
         total_page += len(img_list)
-        imgs[chapter_id] = img_list
         print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
         print('*' * 20)
 
@@ -66,44 +66,53 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
 
 
 def is_available(url: str, session: requests.Session) -> bool:
-    ret = requests.get(url)
+    ret = session.get(url)
     if ret.status_code in [200, 404]:
         return ret.status_code == 200
+    print('Bad Internet connection')
     print('*' * 20)
-    print('Error: Bad Internet connection')
+    ret.raise_for_status()
+
+
+def get_image(url: str, session: requests.Session) -> requests.Response:
+    ret = session.get(url)
+    if ret.status_code in [200, 404]:
+        return ret
+    print('Bad Internet connection')
     print('*' * 20)
     ret.raise_for_status()
 
 
 def claw(url: str, session: requests.Session):
 
-    print('Fetching chapters...')
-
-    chapter_list = get_file_list(url, session)
-    print(f'Found {len(chapter_list)} chapters')
-
     print('Clawing...')
+
+    chapter_id = int(url[-3:])
+    url = url[7:-3]
+    index_url = 'http://' + url + '{:03d}/index.html'
+    image_base_url = 'http://' + url.replace('//', '/')
 
     total_page = 0
     total_time = 0
     imgs = {}
-    for chapter_url in chapter_list:
-        chapter_id = chapter_url[-12:-1]
+    while chapter_id <= 999 and is_available(index_url.format(chapter_id), session):
         print(f'Clawing chapter {chapter_id}')
+        image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         time_usage = time.time()
-        page_list = [
-            'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
-                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
-            )
-        ]
 
+        cnt = 0
         img_list = []
-        concurrent_download(page_list, img_list, session, concurrent)
+        while True:
+            ret = get_image(image_url.format(cnt + 1), session)
+            if ret.status_code == 404:
+                # finished clawing a chapter
+                break
+            img_list.append(ret.content)
 
+        imgs[chapter_id] = img_list
         time_usage = time.time() - time_usage
         total_time += time_usage
         total_page += len(img_list)
-        imgs[chapter_id] = img_list
         print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
         print('*' * 20)
 
@@ -140,6 +149,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
             except KeyError:
                 imgs[chapter_id] = [img]
     elif '/book4/' in url:
+        url = url[:-11]
         imgs = claw_book4(url, concurrent, session)
     else:
         print('Unable to download concurrently due to limitations')
