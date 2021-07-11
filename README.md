@@ -41,16 +41,16 @@ usage: downloader.py [-h] [--url URL] [--no-pdf] [--no-img] [--concurrent CONCUR
 See README.md for help; Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --url URL             input target URL
-  --no-pdf              disable generating PDF
-  --no-img              disable saving images
-  --concurrent CONCURRENT
-                        max number of threads
-  --resume              skip downloading images (for testing)
+  -h, --help         show this help message and exit
+  --url URL          input target URL
+  --no-pdf           disable generating PDF
+  --no-img           disable saving images
+  --quality QUALITY  reduce file size, [1, 96] (85 by recommendation, 96 by default)
+  --con CON          the number of concurrent downloads (6 by default)
+  --resume           skip downloading images (for testing)
 ```
 
-希望尝鲜？从GitHub Actions中下载预览版的可执行文件！
+希望尝鲜？从GitHub Actions中下载预览版的可执行文件！可执行文件由Pyinstaller打包。
 
 ## TODO
 

@@ -1,6 +1,7 @@
 import os
 import time
 from argparse import ArgumentParser
+from distutils.util import strtobool
 
 import requests
 
@@ -42,7 +43,7 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
     imgs = {}
     for chapter_url in chapter_list:
         chapter_id = chapter_url[-12:-1]
-        print(f'Clawing chapter id: {chapter_id}')
+        print(f'Clawing chapter {chapter_id}')
         time_usage = time.time()
         page_list = [
             'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
@@ -57,10 +58,10 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
         total_time += time_usage
         total_page += len(img_list)
         imgs[chapter_id] = img_list
-        print(f'Clawed {len(img_list)} pages, time usage: {time_usage: .3f}s')
+        print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
         print('*' * 20)
 
-    print(f'Clawed {total_page} pages in total, time usage: {total_time: .3f}s')
+    print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
     return imgs
 
 
@@ -68,7 +69,7 @@ def claw():
     pass
 
 
-def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> None:
+def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, resume=False) -> None:
 
     print('Preparing...')
 
@@ -86,18 +87,33 @@ def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) 
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
     })
 
-    if '/book4/' in url:
+    if resume:
+        imgs = {}
+        for file in os.listdir(img_dir):
+            chapter_id = file.split('_')[0]
+            with open(f'{img_dir}/{file}', 'rb') as f:
+                img = f.read()
+            try:
+                imgs[chapter_id].append(img)
+            except KeyError:
+                imgs[chapter_id] = [img]
+    elif '/book4/' in url:
         imgs = claw_book4(url, concurrent, session)
     else:
+        print('Unable to download concurrently due to limitations')
         imgs = claw(url)
+
+    if quality < 96:
+        for img_list in imgs.values():
+            resize(img_list, quality)
 
     if save_img:
         print('Saving images...')
         os.makedirs(img_dir, exist_ok=True)
         for chapter_id, img_list in imgs.items():
             for i, img in enumerate(img_list):
-                with open(img_dir + f'/{chapter_id}_{i:04d}.jpg', 'wb') as f:
-                    f.write(img)
+                with open(img_dir + f'/{chapter_id}_{i:04d}.jpg', 'wb') as file:
+                    file.write(img)
         print(f'Image folder path: {img_dir}')
 
     if gen_pdf:
@@ -117,14 +133,34 @@ if __name__ == '__main__':
     parser.add_argument('--url', type=str, help='input target URL')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
-    parser.add_argument('--concurrent', type=str, default=6, help='max number of threads')
+    parser.add_argument(
+        '--quality',
+        type=int,
+        default=96,
+        help='reduce file size, [1, 96] (85 by recommendation, 96 by default)'
+    )
+    parser.add_argument(
+        '--con', type=int, default=6, help='the number of concurrent downloads (6 by default)'
+    )
     parser.add_argument('--resume', action='store_true', help='skip downloading images (for testing)')
     args = parser.parse_args()
     url = args.url
+    quality = args.quality
 
     if url is None:
-        print('GitHub repo: https://github.com/i207M/reserves-lib-tsinghua-downloader')
-        print('Thanks for using. See README.md for help.')
+        print('GitHub Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader')
+        print('Thanks for using. Please see README.md for help.')
         print('Try running "downloader -h" in terminal for advanced settings.')
+        print('*' * 20)
         url = input('INPUT URL:')
-    download(url, not args.no_pdf, not args.no_img, int(args.concurrent), args.resume)
+        quality = input('Reduce file size? [y/N]')
+        if quality != '' and strtobool(quality):
+            quality = input('Please input quality ratio in [1, 96] (85 by recommendation)')
+            if quality == '':
+                quality = 85
+            quality = int(quality)
+
+    if not (1 <= quality <= 96):
+        raise ValueError('--quality [1, 96] out of bounds')
+
+    download(url, not args.no_pdf, not args.no_img, quality, args.con, args.resume)
