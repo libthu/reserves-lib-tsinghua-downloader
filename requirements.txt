@@ -1,3 +1,5 @@
 -i https://pypi.tuna.tsinghua.edu.cn/simple
 requests
+aiohttp
 pillow
+img2pdf
