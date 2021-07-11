@@ -7,7 +7,7 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ![image-20210308204615230](https://i.loli.net/2021/03/08/zVAYweuK7cHk5os.png)
 
-运行`downloader.py`（或调用函数`claw`），传入的参数为`阅读全文`下第一个链接（图中标黄的位置）。
+运行`downloader.py`（或调用函数`download`），传入的参数为`阅读全文`下第一个链接（图中标黄的位置）。
 
 程序会自动爬取每一章的每一页，保存在`./clawed`下，随后自动生成PDF。
 

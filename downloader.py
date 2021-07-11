@@ -27,7 +27,7 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def claw(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> None:
+def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> None:
 
     print('Preparing...')
 
@@ -50,21 +50,10 @@ def claw(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> N
     chapter_list = get_file_list(url, session)
     print(f'Found {len(chapter_list)} chapters')
 
-    if resume:
-        print('Resuming...')
-        resumed_list = [f for f in os.listdir(img_dir) if os.path.isfile(f'{img_dir}/{f}')]
-        resumed_list.sort()
-        resumed = {}
-        for chapter_url in chapter_list:
-            chapter_id = chapter_url[-12:-1]
-            resumed[chapter_id] = []
-        for f in resumed_list:
-            chapter_id, file_name = f.split('_')
-            resumed[chapter_id].append(file_name)
-
     print('Clawing...')
 
     total_page = 0
+    total_time = 0
     imgs = {}
     for chapter_url in chapter_list:
         chapter_id = chapter_url[-12:-1]
@@ -75,29 +64,18 @@ def claw(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> N
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
-        if resume:
-            resumed_set = set(resumed[chapter_id])
-            download_list = [url for url in page_list if url[url.rfind('/') + 1:] in resumed_set]
-        else:
-            download_list = page_list
 
         img_list = []
-        concurrent_download(download_list, img_list, session, concurrent)
-        assert len(download_list) == len(img_list)
+        concurrent_download(page_list, img_list, session, concurrent)
 
-        total_page += len(img_list)
         time_usage = time.time() - time_usage
-        if resume:
-            imgs[chapter_id] = [
-                open(f'{img_dir}/{chapter_id}_{f}', 'rb').read() for f in resumed[chapter_id]
-            ] + img_list
-            print(f'Resumed {len(page_list)-len(download_list)} pages')
-        else:
-            imgs[chapter_id] = img_list
+        total_time += time_usage
+        total_page += len(img_list)
+        imgs[chapter_id] = img_list
         print(f'Clawed {len(img_list)} pages, time usage: {time_usage: .3f}s')
         print('*' * 20)
 
-    print(f'Clawed {total_page} pages in total')
+    print(f'Clawed {total_page} pages in total, time usage: {total_time: .3f}s')
 
     # TODO: image resize
 
@@ -133,4 +111,4 @@ if __name__ == '__main__':
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url, not args.no_pdf, not args.no_img, int(args.concurrent), args.resume)
+    download(url, not args.no_pdf, not args.no_img, int(args.concurrent), args.resume)
