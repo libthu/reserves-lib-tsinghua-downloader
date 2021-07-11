@@ -35,7 +35,7 @@ def claw(url: str, gen_pdf=True, save_img=False, concurrent=8, resume=False) -> 
     book_id = url[url[:-1].rfind('/') + 1:-1]
     img_dir = 'clawed_' + book_id
 
-    need_cookie = ('//' not in url)  # magic
+    need_cookie = ('/books/' in url)  # magic
     cookie = get_cookie() if need_cookie else {}
 
     session = requests.session()
