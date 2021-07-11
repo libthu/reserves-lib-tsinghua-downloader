@@ -95,7 +95,14 @@ def claw(url: str, session: requests.Session):
     total_page = 0
     total_time = 0
     imgs = {}
-    while chapter_id <= 999 and is_available(index_url.format(chapter_id), session):
+    while chapter_id <= 999:
+        if not is_available(index_url.format(chapter_id), session):
+            for _ in range(20):
+                chapter_id += 1
+                if is_available(index_url.format(chapter_id), session):
+                    break
+            else:
+                break
         print(f'Clawing chapter {chapter_id}')
         image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         time_usage = time.time()
