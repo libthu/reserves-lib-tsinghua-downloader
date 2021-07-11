@@ -65,6 +65,16 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
     return imgs
 
 
+def is_available(url: str, session: requests.Session) -> bool:
+    ret = requests.get(url)
+    if ret.status_code in [200, 404]:
+        return ret.status_code == 200
+    print('*' * 20)
+    print('Error: Bad Internet connection')
+    print('*' * 20)
+    ret.raise_for_status()
+
+
 def claw(url: str, session: requests.Session):
 
     print('Fetching chapters...')
@@ -185,7 +195,7 @@ if __name__ == '__main__':
         print('Try running "downloader -h" in terminal for advanced settings.')
         print('*' * 20)
         url = input('INPUT URL: ')
-        quality = input('Reduce file size? [y/N] ')
+        quality = input('Reduce file size? y/[n] ')
         if quality != '' and strtobool(quality):
             quality = input('Please input quality ratio in [1, 96] (85 by recommendation): ')
             if quality == '':
