@@ -27,23 +27,7 @@ def get_base_url(url: str) -> str:
     return 'http://' + url
 
 
-def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> None:
-
-    print('Preparing...')
-
-    url = get_base_url(url)
-    book_id = url[url[:-1].rfind('/') + 1:-1]
-    img_dir = 'clawed_' + book_id
-
-    need_cookie = ('/books/' in url)  # magic
-    cookie = get_cookie() if need_cookie else {}
-
-    session = requests.session()
-    session.cookies = requests.utils.cookiejar_from_dict(cookie)
-    session.headers.update({
-        'user-agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
-    })
+def claw_book4(url: str, concurrent: int, session: requests.Session):
 
     print('Fetching chapters...')
 
@@ -76,6 +60,35 @@ def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) 
         print('*' * 20)
 
     print(f'Clawed {total_page} pages in total, time usage: {total_time: .3f}s')
+    return imgs
+
+
+def claw():
+    pass
+
+
+def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) -> None:
+
+    print('Preparing...')
+
+    url = get_base_url(url)
+    book_id = url[url[:-1].rfind('/') + 1:-1]
+    img_dir = 'clawed_' + book_id
+
+    need_cookie = ('/books/' in url)  # magic
+    cookie = get_cookie() if need_cookie else {}
+
+    session = requests.session()
+    session.cookies = requests.utils.cookiejar_from_dict(cookie)
+    session.headers.update({
+        'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+    })
+
+    if '/book4/' in url:
+        imgs = claw_book4(url, concurrent, session)
+    else:
+        imgs = claw(url)
 
     # TODO: image resize
 
@@ -86,6 +99,7 @@ def download(url: str, gen_pdf=True, save_img=True, concurrent=6, resume=False) 
         print(f'PDF path: {pdf_path}')
 
     if save_img:
+        print('Saving images...')
         os.makedirs(img_dir, exist_ok=True)
         for chapter_id, img_list in imgs.items():
             for i, img in enumerate(img_list):
@@ -110,5 +124,8 @@ if __name__ == '__main__':
     url = args.url
 
     if url is None:
+        print('GitHub repo: https://github.com/i207M/reserves-lib-tsinghua-downloader')
+        print('Thanks for using. See README.md for help.')
+        print('Try running "downloader -h" in terminal for advanced settings.')
         url = input('INPUT URL:')
     download(url, not args.no_pdf, not args.no_img, int(args.concurrent), args.resume)

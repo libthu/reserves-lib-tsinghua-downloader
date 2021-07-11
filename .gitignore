@@ -6,3 +6,6 @@ __pycache__
 claw*
 cookie.txt
 *.pdf
+bin/build
+bin/dist
+bin/downloader.spec
