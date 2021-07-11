@@ -108,6 +108,7 @@ def claw(url: str, session: requests.Session):
                 # finished clawing a chapter
                 break
             img_list.append(ret.content)
+            cnt += 1
 
         imgs[chapter_id] = img_list
         time_usage = time.time() - time_usage
@@ -115,6 +116,7 @@ def claw(url: str, session: requests.Session):
         total_page += len(img_list)
         print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
         print('*' * 20)
+        chapter_id += 1
 
     print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
     return imgs
@@ -125,7 +127,8 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
     print('Preparing...')
 
     url = get_base_url(url)
-    book_id = url[url[:-1].rfind('/') + 1:-1]
+    sep = url[:-11].rfind('/')
+    book_id = url[sep + 1:sep + 9]
     img_dir = 'clawed_' + book_id
 
     need_cookie = ('/books/' in url)  # magic
