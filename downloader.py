@@ -135,4 +135,4 @@ if __name__ == '__main__':
 
     if url is None:
         url = input('INPUT URL:')
-    claw(url, not args.no_pdf, args.saveimg, args.concurrent, args.resume)
+    claw(url, not args.no_pdf, args.saveimg, int(args.concurrent), args.resume)
