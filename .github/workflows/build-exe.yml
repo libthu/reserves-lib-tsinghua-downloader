@@ -29,6 +29,6 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: downloader-py${{ matrix.python-version }}.exe
+          name: downloader-py${{ matrix.python-version }}
           path: bin\dist\downloader.exe
 
