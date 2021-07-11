@@ -65,8 +65,40 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
     return imgs
 
 
-def claw():
-    pass
+def claw(url: str, session: requests.Session):
+
+    print('Fetching chapters...')
+
+    chapter_list = get_file_list(url, session)
+    print(f'Found {len(chapter_list)} chapters')
+
+    print('Clawing...')
+
+    total_page = 0
+    total_time = 0
+    imgs = {}
+    for chapter_url in chapter_list:
+        chapter_id = chapter_url[-12:-1]
+        print(f'Clawing chapter {chapter_id}')
+        time_usage = time.time()
+        page_list = [
+            'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
+                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
+            )
+        ]
+
+        img_list = []
+        concurrent_download(page_list, img_list, session, concurrent)
+
+        time_usage = time.time() - time_usage
+        total_time += time_usage
+        total_page += len(img_list)
+        imgs[chapter_id] = img_list
+        print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
+        print('*' * 20)
+
+    print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
+    return imgs
 
 
 def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, resume=False) -> None:
@@ -101,7 +133,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
         imgs = claw_book4(url, concurrent, session)
     else:
         print('Unable to download concurrently due to limitations')
-        imgs = claw(url)
+        imgs = claw(url, session)
 
     if quality < 96:
         for img_list in imgs.values():
