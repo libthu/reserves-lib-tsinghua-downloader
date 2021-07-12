@@ -42,7 +42,7 @@ Run `downloader --help` in terminal.
 ```
 usage: downloader.py [-h] [--url URL] [--no-pdf] [--no-img] [--concurrent CONCURRENT] [--resume]
 
-See README.md for help; Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader
+See README.md for help. Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader
 
 optional arguments:
   -h, --help         show this help message and exit

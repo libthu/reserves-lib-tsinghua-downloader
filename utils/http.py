@@ -2,7 +2,7 @@ import requests
 from html.parser import HTMLParser
 
 
-class HTMLParserTHU(HTMLParser):
+class CustomHTMLParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.file_list = []
@@ -15,6 +15,6 @@ class HTMLParserTHU(HTMLParser):
 def get_file_list(url: str, session: requests.Session):
     ret = session.get(url)
     ret.raise_for_status()
-    parser = HTMLParserTHU()
+    parser = CustomHTMLParser()
     parser.feed(ret.text)
     return parser.file_list[1:]
