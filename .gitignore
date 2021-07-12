@@ -3,7 +3,7 @@ Thumbs.db
 db.json
 *.log
 __pycache__
-claw*
+clawed_*
 cookie.txt
 *.pdf
 bin/build
