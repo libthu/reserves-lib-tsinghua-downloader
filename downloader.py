@@ -6,8 +6,8 @@ import requests
 
 from utils.claw import claw, claw_book4
 from utils.cookie import get_cookie
-from utils.pdf import generate_pdf
 from utils.image import resize
+from utils.pdf import generate_pdf
 
 __author__ = 'i207M'
 
