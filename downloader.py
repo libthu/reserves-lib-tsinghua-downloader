@@ -1,15 +1,13 @@
 import os
-import time
 from argparse import ArgumentParser
 from distutils.util import strtobool
 
 import requests
 
-from utils.http import get_file_list
-from utils.concurrent import concurrent_download
+from utils.claw import claw, claw_book4
 from utils.cookie import get_cookie
-from utils.pdf import generate_pdf
 from utils.image import resize
+from utils.pdf import generate_pdf
 
 __author__ = 'i207M'
 
@@ -29,103 +27,16 @@ def get_base_url(url: str) -> str:
     return url
 
 
-def claw_book4(url: str, concurrent: int, session: requests.Session):
-
-    print('Fetching chapters...')
-
-    chapter_list = get_file_list(url, session)
-    print(f'Found {len(chapter_list)} chapters')
-
-    print('Clawing...')
-
-    total_page = 0
-    total_time = 0
+def resume_file(img_dir: str):
     imgs = {}
-    for chapter_url in chapter_list:
-        chapter_id = chapter_url[-12:-1]
-        print(f'Clawing chapter {chapter_id}')
-        time_usage = time.time()
-        page_list = [
-            'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
-                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
-            )
-        ]
-
-        img_list = []
-        concurrent_download(page_list, img_list, session, concurrent)
-
-        imgs[chapter_id] = img_list
-        time_usage = time.time() - time_usage
-        total_time += time_usage
-        total_page += len(img_list)
-        print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
-        print('*' * 20)
-
-    print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
-    return imgs
-
-
-def is_available(url: str, session: requests.Session) -> bool:
-    ret = session.get(url)
-    if ret.status_code in [200, 404]:
-        return ret.status_code == 200
-    print('Bad Internet connection')
-    print('*' * 20)
-    ret.raise_for_status()
-
-
-def get_image(url: str, session: requests.Session) -> requests.Response:
-    ret = session.get(url)
-    if ret.status_code in [200, 404]:
-        return ret
-    print('Bad Internet connection')
-    print('*' * 20)
-    ret.raise_for_status()
-
-
-def claw(url: str, session: requests.Session):
-
-    print('Clawing...')
-
-    chapter_id = int(url[-3:])
-    url = url[7:-3]
-    index_url = 'http://' + url + '{:03d}/index.html'
-    image_base_url = 'http://' + url.replace('//', '/')
-
-    total_page = 0
-    total_time = 0
-    imgs = {}
-    while chapter_id <= 999:
-        if not is_available(index_url.format(chapter_id), session):
-            for _ in range(20):
-                chapter_id += 1
-                if is_available(index_url.format(chapter_id), session):
-                    break
-            else:
-                break
-        print(f'Clawing chapter {chapter_id}')
-        image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
-        time_usage = time.time()
-
-        cnt = 0
-        img_list = []
-        while True:
-            ret = get_image(image_url.format(cnt + 1), session)
-            if ret.status_code == 404:
-                # finished clawing a chapter
-                break
-            img_list.append(ret.content)
-            cnt += 1
-
-        imgs[chapter_id] = img_list
-        time_usage = time.time() - time_usage
-        total_time += time_usage
-        total_page += len(img_list)
-        print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
-        print('*' * 20)
-        chapter_id += 1
-
-    print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
+    for file in os.listdir(img_dir):
+        chapter_id = file.split('_')[0]
+        with open(f'{img_dir}/{file}', 'rb') as f:
+            img = f.read()
+        try:
+            imgs[chapter_id].append(img)
+        except KeyError:
+            imgs[chapter_id] = [img]
     return imgs
 
 
@@ -149,15 +60,8 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
     })
 
     if resume:
-        imgs = {}
-        for file in os.listdir(img_dir):
-            chapter_id = file.split('_')[0]
-            with open(f'{img_dir}/{file}', 'rb') as f:
-                img = f.read()
-            try:
-                imgs[chapter_id].append(img)
-            except KeyError:
-                imgs[chapter_id] = [img]
+        print('Resuming...')
+        imgs = resume_file(img_dir)
     elif '/book4/' in url:
         url = url[:-11]
         imgs = claw_book4(url, concurrent, session)
@@ -189,7 +93,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
 
 if __name__ == '__main__':
     parser = ArgumentParser(
-        description='See README.md for help; '
+        description='See README.md for help. '
         'Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader'
     )
     parser.add_argument('--url', type=str, help='input target URL')
@@ -218,10 +122,8 @@ if __name__ == '__main__':
         quality = input('Reduce file size? y/[n] ')
         if quality != '' and strtobool(quality):
             quality = input('Please input quality ratio in [1, 96] (85 by recommendation): ')
-            if quality == '':
-                quality = 85
-            quality = int(quality)
-        elif quality == '':
+            quality = int(quality) if quality != '' else 85
+        else:
             quality = 96
 
     if not (1 <= quality <= 96):
