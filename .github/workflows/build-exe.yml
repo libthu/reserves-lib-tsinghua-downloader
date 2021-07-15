@@ -31,4 +31,3 @@ jobs:
         with:
           name: downloader-py${{ matrix.python-version }}
           path: bin\dist\downloader.exe
-
