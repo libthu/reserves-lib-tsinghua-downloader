@@ -70,6 +70,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
         imgs = claw(url, session)
 
     if quality < 96:
+        print('Optimizing images...')
         for img_list in imgs.values():
             resize(img_list, quality)
 
