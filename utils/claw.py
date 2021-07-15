@@ -2,8 +2,8 @@ import time
 
 import requests
 
-from utils.http import get_file_list
 from utils.concurrent import concurrent_download
+from utils.http import get_file_list
 
 
 def claw_book4(url: str, concurrent: int, session: requests.Session):

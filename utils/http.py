@@ -1,5 +1,6 @@
-import requests
 from html.parser import HTMLParser
+
+import requests
 
 
 class CustomHTMLParser(HTMLParser):
