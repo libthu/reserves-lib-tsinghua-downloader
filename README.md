@@ -8,13 +8,13 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ## Download
 
-点击右侧[Releases](https://github.com/i207M/reserves-lib-tsinghua-downloader/releases/latest)，下载`Assets`中的`downloader.exe`。
+点击右侧[Releases](https://github.com/i207M/reserves-lib-tsinghua-downloader/releases/latest)，下载`Assets`中的`downloader.exe`。（可执行文件由Pyinstaller生成）
 
 ## Usage
 
 ![image-20210308204615230](https://i.loli.net/2021/03/08/zVAYweuK7cHk5os.png)
 
-运行`downloader`，输入`阅读全文`之下的链接地址（如图中标黄的位置）。程序会自动爬取当前章节以下的所有章节。
+运行`downloader`，输入网站`阅读全文`之下的链接地址（如图中标黄的位置）。程序会自动爬取当前章节以下的所有章节。
 
 程序会将图片保存在`./clawed`下，并自动生成PDF。
 
@@ -22,19 +22,19 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ## Q&A
 
-Q: 运行报错`ModuleNotFoundError`，怎么办？
+**Q:** 图片压缩的 `quality ratio` 怎样设置？
 
-A: 在终端中运行`pip install -r requirements.txt`以安装依赖。
+A: 范围[1, 96]：其中96为不压缩，[1, 95]从最差到最佳。
 
-Q: 运行报错`Cookie Required`，怎么办？
+**Q:** 运行报错`Cookie Required`，怎么办？
 
 A: 经测试，绝大部分教参无需`cookie`即可访问。少数教参需要`cookie`进行身份验证，请将网站`cookie`中，`.ASPXAUTH`和`ASP.NET_SessionId`的值依次写入`cookie.txt`中，每行一个。（我将会完善获取网站`cookie`的相关教程。若急需，请与我发邮件）
 
-Q: 下载的章节不全？
+**Q:** 下载的章节不全？
 
-A: 这是因为此图书的目录编号不连续。请再次运行程序并输入下一位置的章节链接。
+A: 这是因为此图书的目录编号不连续。请再次运行程序并输入下一位置的章节链接。通常不会出现此情况。
 
-Q: 分享一点高级玩法？
+**Q:** 分享一点高级玩法？
 
 A: 使用学校提供的正版福昕编辑器可以进行OCR文字识别。
 
@@ -57,7 +57,7 @@ optional arguments:
   --resume           skip downloading images (for testing)
 ```
 
-希望尝鲜？从GitHub Actions中下载预览版的可执行文件！可执行文件由Pyinstaller打包。
+希望尝鲜？从GitHub Actions中下载预览版的可执行文件！
 
 ## TODO
 
@@ -72,7 +72,6 @@ optional arguments:
 
 欢迎Star/Issue/PR.
 
-*仅供学习编程，请勿用于非法用途！*
+*仅供学习，请勿用于非法用途！*
 
 更多清华常用信息/服务汇总请看[这里](https://github.com/ZenithalHourlyRate/thuservices)。
-
