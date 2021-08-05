@@ -4,10 +4,11 @@
 name: Release Test
 
 on:
-  push:
-    branches:
-      - main
-  # release:
+  # push:
+  #   branches:
+  #     - main
+  release:
+    types: [published]
 
 jobs:
   build:
