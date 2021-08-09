@@ -119,6 +119,8 @@ if __name__ == '__main__':
         print('Thanks for using. Please see README.md for help.')
         print('Try running "downloader -h" in terminal for advanced settings.')
         print('*' * 20)
+        print('Made by i207M with Love :) Email: connect@mail.i207m.top')
+        print('*' * 20)
         url = input('INPUT URL: ')
         quality = input('Reduce file size? y/[n] ')
         if quality != '' and strtobool(quality):
