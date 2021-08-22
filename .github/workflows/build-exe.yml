@@ -31,3 +31,4 @@ jobs:
         with:
           name: downloader-py${{ env.python-version }}
           path: bin\dist\downloader.exe
+          retention-days: 30
