@@ -13,7 +13,7 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
     chapter_list = get_file_list(url, session)
     print(f'Found {len(chapter_list)} chapters')
 
-    print('Clawing...')
+    print(f'Clawing with {concurrent} thread(s)...')
 
     total_page = 0
     total_time = 0
