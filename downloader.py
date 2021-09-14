@@ -44,7 +44,6 @@ def resume_file(img_dir: str):
 def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, resume=False) -> None:
 
     print('Preparing...')
-
     url = get_base_url(url)
     sep = url[:-11].rfind('/')
     book_id = url[sep + 1:sep + 9]
@@ -135,6 +134,8 @@ if __name__ == '__main__':
 
     try:
         download(url, not args.no_pdf, not args.no_img, quality, args.con, args.resume)
-    except Exception:
+    except Exception as e:
+        print('*' * 20)
+        print(e)
         print('An exception occurred.')
     input("Press Enter to Exit.")  # Prevent window from closing

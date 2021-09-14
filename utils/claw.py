@@ -28,6 +28,7 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
                 'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
             )
         ]
+        page_list.sort(key=lambda url: int(url[76:-4]))
 
         img_list = []
         concurrent_download(page_list, img_list, session, concurrent)
