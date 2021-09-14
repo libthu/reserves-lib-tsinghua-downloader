@@ -52,7 +52,7 @@ optional arguments:
   --url URL          input target URL
   --no-pdf           disable generating PDF
   --no-img           disable saving images
-  --quality QUALITY  reduce file size, [1, 96] (85 by recommendation, 96 by default)
+  --quality QUALITY  reduce file size, [1, 96] (75 by recommendation, 96 by default)
   --con CON          the number of concurrent downloads (6 by default)
   --resume           skip downloading images (for testing)
 ```

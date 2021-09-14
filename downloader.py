@@ -18,6 +18,7 @@ __author__ = 'i207M'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
 
 
+# This may be re-written using regular expression.
 def get_base_url(url: str) -> str:
     if not (url.startswith('http://reserves.lib.tsinghua.edu.cn/') and url.endswith('/index.html')):
         raise Exception('Invalid URL')
@@ -104,7 +105,7 @@ if __name__ == '__main__':
         '--quality',
         type=int,
         default=96,
-        help='reduce file size, [1, 96] (85 by recommendation, 96 by default)'
+        help='reduce file size, [1, 96] (75 by recommendation, 96 by default)'
     )
     parser.add_argument(
         '--con', type=int, default=6, help='the number of concurrent downloads (6 by default)'
@@ -124,7 +125,7 @@ if __name__ == '__main__':
         url = input('INPUT URL: ')
         quality = input('Reduce file size? y/[n] ')
         if quality != '' and strtobool(quality):
-            quality = input('Please input quality ratio in [1, 96] (85 by recommendation): ')
+            quality = input('Please input quality ratio in [1, 96] (75 by recommendation): ')
             quality = int(quality) if quality != '' else 85
         else:
             quality = 96
@@ -132,5 +133,8 @@ if __name__ == '__main__':
     if not (1 <= quality <= 96):
         raise ValueError('--quality [1, 96] out of bounds')
 
-    download(url, not args.no_pdf, not args.no_img, quality, args.con, args.resume)
+    try:
+        download(url, not args.no_pdf, not args.no_img, quality, args.con, args.resume)
+    except Exception:
+        print('An exception occurred.')
     input("Press Enter to Exit.")  # Prevent window from closing
