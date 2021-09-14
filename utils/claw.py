@@ -1,4 +1,5 @@
 import time
+import sys
 
 import requests
 
@@ -11,7 +12,7 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
     print('Fetching chapters...')
 
     chapter_list = get_file_list(url, session)
-    print(f'Found {len(chapter_list)} chapters')
+    print(f'Found {len(chapter_list)} chapters.')
 
     print(f'Clawing with {concurrent} thread(s)...')
 
@@ -93,6 +94,9 @@ def claw(url: str, session: requests.Session):
                 break
             img_list.append(ret.content)
             cnt += 1
+            sys.stdout.write(f'Downloaded Page #{cnt}')
+            sys.stdout.write('\r')
+            sys.stdout.flush()
 
         imgs[chapter_id] = img_list
         time_usage = time.time() - time_usage

@@ -1,4 +1,5 @@
 import asyncio
+import sys
 
 import aiohttp
 import requests
@@ -29,3 +30,6 @@ def concurrent_download(file_list, img_list, session: requests.Session, concurre
     urls_generator = (file_list[i:i + concurrent] for i in range(0, len(file_list), concurrent))
     for urls in urls_generator:
         img_list += asyncio.run(fetch_concurrent(urls, cookies, headers))
+        sys.stdout.write(f'Downloaded Page #{len(img_list)}')
+        sys.stdout.write('\r')
+        sys.stdout.flush()

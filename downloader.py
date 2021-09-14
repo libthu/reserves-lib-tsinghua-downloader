@@ -66,7 +66,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
         url = url[:-11]
         imgs = claw_book4(url, concurrent, session)
     else:
-        print('Unable to download concurrently due to limitations')
+        print('Unable to download concurrently due to limitations.')
         imgs = claw(url, session)
 
     if quality < 96:
@@ -89,7 +89,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
         generate_pdf(pdf_path, imgs)
         print(f'PDF path: {pdf_path}')
 
-    print('Done')
+    print('Done.')
 
 
 if __name__ == '__main__':
@@ -133,3 +133,4 @@ if __name__ == '__main__':
         raise ValueError('--quality [1, 96] out of bounds')
 
     download(url, not args.no_pdf, not args.no_img, quality, args.con, args.resume)
+    input("Press Enter to Exit.")  # Prevent window from closing
