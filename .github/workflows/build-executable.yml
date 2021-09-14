@@ -50,7 +50,7 @@ jobs:
           pip install -r requirements.txt
       - name: Build with pyinstaller
         run: |
-          pyinstaller downloader.py --icon bin/logo.ico
+          pyinstaller downloader.py --onefile --icon bin/logo.ico
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
