@@ -25,14 +25,15 @@ jobs:
         run: |
           cd bin\
           .\build.bat
-          cp .\dist ..
+          cd ..
+          cp .\bin\dist\downloader.exe .
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: downloader-windows-py${{ env.python-version }}
           path: |
             README.md
-            dist\downloader.exe
+            downloader.exe
           retention-days: 30
 
   macos:
@@ -54,12 +55,13 @@ jobs:
       - name: Build with pyinstaller
         run: |
           pyinstaller downloader.py --onefile --icon bin/logo.ico
-          chmod +x dist/downloader
+          cp dist/downloader .
+          chmod +x downloader
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: downloader-macos-py${{ env.python-version }}
           path: |
             README.md
-            dist/downloader
+            downloader
           retention-days: 30
