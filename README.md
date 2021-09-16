@@ -22,7 +22,7 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ### MacOS
 
-MacOS的用户如果无法直接运行`downloader`，可能需要给予其执行权限。方法：在终端中进入`downloader`所在的文件夹，执行`chmod +x downloader`命令。
+MacOS的用户可能不能直接运行`downloader`，是因为给予其执行权限。方法：在终端中进入`downloader`所在的文件夹，执行`chmod +x downloader`命令。
 
 ## Q&A
 

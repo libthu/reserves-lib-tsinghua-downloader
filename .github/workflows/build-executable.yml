@@ -25,13 +25,14 @@ jobs:
         run: |
           cd bin\
           .\build.bat
+          cp .\bin\dist .
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: downloader-windows-py${{ env.python-version }}
           path: |
             README.md
-            bin\dist\downloader.exe
+            dist\downloader.exe
           retention-days: 30
 
   macos:
