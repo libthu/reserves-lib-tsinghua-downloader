@@ -1,4 +1,4 @@
-# 清华教参服务平台 电子书下载
+# 清华教参服务平台 辅助工具
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/i207M/reserves-lib-tsinghua-downloader) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/i207M/reserves-lib-tsinghua-downloader/Release%20Test/main) ![GitHub issues](https://img.shields.io/github/issues/i207M/reserves-lib-tsinghua-downloader)
 
