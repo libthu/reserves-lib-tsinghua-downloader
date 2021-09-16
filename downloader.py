@@ -115,9 +115,8 @@ if __name__ == '__main__':
     quality = args.quality
 
     if url is None:
-        print('Website: https://reserves-lib.netlify.app')
         print('GitHub Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader')
-        print('Thanks for using. Please see website or README.md for help.')
+        print('Thanks for using. Please see README.md for help.')
         print('Try running "downloader -h" in terminal for advanced settings.')
         print('*' * 20)
         print('Made by i207M with Love :) Email: connect@mail.i207m.top')

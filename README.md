@@ -76,6 +76,6 @@ optional arguments:
 
 ---
 
-*仅供学习，请勿用于非法用途！*
+*仅供Python语言的学习参考，请勿用于非法用途！*
 
 更多清华常用信息/服务汇总请看[这里](https://github.com/ZenithalHourlyRate/thuservices)。

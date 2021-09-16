@@ -53,6 +53,7 @@ jobs:
       - name: Build with pyinstaller
         run: |
           pyinstaller downloader.py --onefile --icon bin/logo.ico
+          chmod +x dist/downloader
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
