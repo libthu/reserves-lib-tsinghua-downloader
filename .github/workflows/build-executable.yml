@@ -29,7 +29,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: downloader-windows-py${{ env.python-version }}
-          path: bin\dist\downloader.exe
+          path: |
+            README.md
+            bin\dist\downloader.exe
           retention-days: 30
 
   macos:
@@ -55,5 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: downloader-macos-py${{ env.python-version }}
-          path: dist/downloader
+          path: |
+            README.md
+            dist/downloader
           retention-days: 30
