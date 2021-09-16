@@ -25,7 +25,7 @@ jobs:
         run: |
           cd bin\
           .\build.bat
-          cp .\bin\dist .
+          cp .\dist ..
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
