@@ -62,6 +62,7 @@ optional arguments:
   --no-img           disable saving images
   --quality QUALITY  reduce file size, [1, 96] (75 by recommendation, 96 by default)
   --con CON          the number of concurrent downloads (6 by default)
+  --end              automatically terminate the process after finishing
   --resume           skip downloading images (for testing)
 ```
 
