@@ -109,10 +109,14 @@ if __name__ == '__main__':
     parser.add_argument(
         '--con', type=int, default=6, help='the number of concurrent downloads (6 by default)'
     )
+    parser.add_argument(
+        '--end', action='store_true', help='automatically terminate the process after finishing'
+    )
     parser.add_argument('--resume', action='store_true', help='skip downloading images (for testing)')
     args = parser.parse_args()
     url = args.url
     quality = args.quality
+    auto_end = args.end
 
     if url is None:
         print('GitHub Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader')
@@ -138,4 +142,6 @@ if __name__ == '__main__':
         print(e)
         print('*' * 20)
         print('An exception occurred.')
-    input("Press Enter to Exit.")  # Prevent window from closing
+
+    if not auto_end:
+        input("Press Enter to Exit.")  # Prevent window from closing
