@@ -9,8 +9,6 @@ from utils.cookie import get_cookie
 from utils.image import resize
 from utils.pdf import generate_pdf
 
-__author__ = 'i207M'
-
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/mobile/index.html'
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/mobile/index.html'
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book6/00009127/00009127000/mobile/index.html'
@@ -93,25 +91,13 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser(
-        description='See README.md for help. '
-        'Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader'
-    )
+    parser = ArgumentParser(description='See README.md for help. ' 'Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
     parser.add_argument('--url', type=str, help='input target URL')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
-    parser.add_argument(
-        '--quality',
-        type=int,
-        default=96,
-        help='reduce file size, [1, 96] (75 by recommendation, 96 by default)'
-    )
-    parser.add_argument(
-        '--con', type=int, default=6, help='the number of concurrent downloads (6 by default)'
-    )
-    parser.add_argument(
-        '--end', action='store_true', help='automatically terminate the process after finishing'
-    )
+    parser.add_argument('--quality', type=int, default=96, help='reduce file size, [1, 96] (75 by recommendation, 96 by default)')
+    parser.add_argument('--con', type=int, default=6, help='the number of concurrent downloads (6 by default)')
+    parser.add_argument('--end', action='store_true', help='automatically terminate the process after finishing')
     parser.add_argument('--resume', action='store_true', help='skip downloading images (for testing)')
     args = parser.parse_args()
     url = args.url
@@ -119,11 +105,11 @@ if __name__ == '__main__':
     auto_end = args.end
 
     if url is None:
-        print('GitHub Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader')
+        print('GitHub Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
         print('Thanks for using. Please see README.md for help.')
         print('Try running "downloader -h" in terminal for advanced settings.')
         print('*' * 20)
-        print('Made by i207M with Love :) Email: connect@mail.i207m.top')
+        print('Made with Love :) Email: libthu@yandex.com')
         print('*' * 20)
         url = input('INPUT URL: ')
         quality = input('Reduce file size? y/[n] ')

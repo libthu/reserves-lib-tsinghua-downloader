@@ -1,6 +1,6 @@
 # 清华教参服务平台 辅助工具
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/i207M/reserves-lib-tsinghua-downloader) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/i207M/reserves-lib-tsinghua-downloader/Release%20Test/main) ![GitHub issues](https://img.shields.io/github/issues/i207M/reserves-lib-tsinghua-downloader) [![Netlify Status](https://api.netlify.com/api/v1/badges/d6a79087-90b9-4659-9700-acd47b95cd9b/deploy-status)](https://reserves-lib.netlify.app/)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/libthu/reserves-lib-tsinghua-downloader) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/libthu/reserves-lib-tsinghua-downloader/Release%20Test/main) ![GitHub issues](https://img.shields.io/github/issues/libthu/reserves-lib-tsinghua-downloader)
 
 Download pages from http://reserves.lib.tsinghua.edu.cn/
 
@@ -8,7 +8,7 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ## Download
 
-从[Releases](https://github.com/i207M/reserves-lib-tsinghua-downloader/releases/latest)或[项目网站](https://reserves-lib.netlify.app/)，下载`Assets`中对应系统的可执行文件。
+从[Releases](https://github.com/libthu/reserves-lib-tsinghua-downloader/releases/latest)，下载`Assets`中对应系统的可执行文件。
 
 ## Usage
 
@@ -53,7 +53,7 @@ Run `downloader --help` in terminal.
 ```
 usage: downloader.exe [-h] [--url URL] [--no-pdf] [--no-img] [--quality QUALITY] [--con CON] [--resume]
 
-See README.md for help. Repo: https://github.com/i207M/reserves-lib-tsinghua-downloader
+See README.md for help. Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader
 
 optional arguments:
   -h, --help         show this help message and exit
