@@ -70,6 +70,7 @@ optional arguments:
 
 ## TODO
 
+- Fetch pure text from website
 - PDF Bookmark
 - You tell me
 
