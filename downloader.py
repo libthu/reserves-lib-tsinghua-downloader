@@ -4,7 +4,7 @@ from distutils.util import strtobool
 
 import requests
 
-from utils.claw import claw, claw_book4
+from utils.claw import claw
 from utils.cookie import get_cookie
 from utils.image import resize
 from utils.pdf import generate_pdf
@@ -18,8 +18,8 @@ from utils.pdf import generate_pdf
 
 # This may be re-written using regular expression.
 def get_base_url(url: str) -> str:
-    if not (url.startswith('http://reserves.lib.tsinghua.edu.cn/') and url.endswith('/index.html')):
-        raise Exception('Invalid URL')
+    assert url.startswith('http://reserves.lib.tsinghua.edu.cn/')
+    assert url.endswith('/index.html')
     url = url[:-11]  # '/index.html'
     if url.endswith('mobile'):
         url = url[:-7]
@@ -47,7 +47,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
     book_id = url[sep + 1:sep + 9]
     img_dir = 'clawed_' + book_id
 
-    need_cookie = ('/books/' in url)  # magic
+    need_cookie = ('/books/' in url)  # Magic.
     cookie = get_cookie() if need_cookie else {}
 
     session = requests.session()
@@ -60,11 +60,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
     if resume:
         print('Resuming...')
         imgs = resume_file(img_dir)
-    elif '/book4/' in url:
-        url = url[:-11]
-        imgs = claw_book4(url, concurrent, session)
     else:
-        print('Unable to download concurrently due to limitations.')
         imgs = claw(url, session)
 
     if quality < 96:
@@ -92,17 +88,16 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='See README.md for help. ' 'Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
-    parser.add_argument('--url', type=str, help='input target URL')
+    parser.add_argument('-u', '--url', type=str, help='input target URL')
+    parser.add_argument('-q', '--quality', type=int, default=96, metavar='Q', help='reduce file size, [1, 96] (75 by recommendation, 96 by default)')
+    parser.add_argument('-c', '--concurrent', type=int, default=6, metavar='C', help='the number of concurrent downloads (6 by default)')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
-    parser.add_argument('--quality', type=int, default=96, help='reduce file size, [1, 96] (75 by recommendation, 96 by default)')
-    parser.add_argument('--con', type=int, default=6, help='the number of concurrent downloads (6 by default)')
     parser.add_argument('--end', action='store_true', help='automatically terminate the process after finishing')
-    parser.add_argument('--resume', action='store_true', help='skip downloading images (for testing)')
+    parser.add_argument('--resume', action='store_true', help='skip downloading images')
     args = parser.parse_args()
     url = args.url
     quality = args.quality
-    auto_end = args.end
 
     if url is None:
         print('GitHub Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
@@ -115,19 +110,19 @@ if __name__ == '__main__':
         quality = input('Reduce file size? y/[n] ')
         if quality != '' and strtobool(quality):
             quality = input('Please input quality ratio in [1, 96] (75 by recommendation): ')
-            quality = int(quality) if quality != '' else 85
+            quality = int(quality) if quality != '' else 75
         else:
             quality = 96
 
     if not (1 <= quality <= 96):
-        raise ValueError('--quality [1, 96] out of bounds')
+        raise ValueError('Argument "quality" is out of bounds [1, 96].')
 
     try:
-        download(url, not args.no_pdf, not args.no_img, quality, args.con, args.resume)
+        download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.resume)
     except Exception as e:
         print(e)
         print('*' * 20)
         print('An exception occurred.')
 
-    if not auto_end:
-        input("Press Enter to Exit.")  # Prevent window from closing
+    if not args.end:
+        input("Press Enter to Exit.")  # Prevent window from closing.

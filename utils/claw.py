@@ -75,7 +75,7 @@ def claw(url: str, session: requests.Session):
     imgs = {}
     while chapter_id <= 999:
         if not is_available(index_url.format(chapter_id), session):
-            # in case the index is not continuous
+            # In case the index is not continuous.
             for _ in range(20):
                 chapter_id += 1
                 if is_available(index_url.format(chapter_id), session):
@@ -91,7 +91,7 @@ def claw(url: str, session: requests.Session):
         while True:
             ret = get_image(image_url.format(cnt + 1), session)
             if ret.status_code == 404:
-                # finished clawing a chapter
+                # Finished clawing a chapter.
                 break
             img_list.append(ret.content)
             cnt += 1
