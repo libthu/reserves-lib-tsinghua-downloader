@@ -18,8 +18,8 @@ from utils.pdf import generate_pdf
 
 # This may be re-written using regular expression.
 def get_base_url(url: str) -> str:
-    assert url.startswith('http://reserves.lib.tsinghua.edu.cn/')
-    assert url.endswith('/index.html')
+    assert url.startswith('http://reserves.lib.tsinghua.edu.cn/'), 'Invalid URL'
+    assert url.endswith('/index.html'), 'Invalid URL'
     url = url[:-11]  # '/index.html'
     if url.endswith('mobile'):
         url = url[:-7]
@@ -40,7 +40,6 @@ def resume_file(img_dir: str):
 
 
 def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, resume=False) -> None:
-
     print('Preparing...')
     url = get_base_url(url)
     sep = url[:-11].rfind('/')
@@ -113,16 +112,16 @@ if __name__ == '__main__':
             quality = int(quality) if quality != '' else 75
         else:
             quality = 96
+    assert (1 <= quality <= 96)
 
-    if not (1 <= quality <= 96):
-        raise ValueError('Argument "quality" is out of bounds [1, 96].')
-
-    try:
-        download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.resume)
-    except Exception as e:
-        print(e)
-        print('*' * 20)
-        print('An exception occurred.')
+    download(
+        url,
+        not args.no_pdf,
+        not args.no_img,
+        quality,
+        args.concurrent,
+        args.resume,
+    )
 
     if not args.end:
         input("Press Enter to Exit.")  # Prevent window from closing.
