@@ -14,6 +14,7 @@ def get_cookie():
         data = [v.strip() for v in f.read().splitlines()]
     if len(data) != 2:
         raise Exception(f'Too many or too few lines in "{COOKIE_PATH}"')
+
     cookie['.ASPXAUTH'] = data[0]
     cookie['ASP.NET_SessionId'] = data[1]
     return cookie

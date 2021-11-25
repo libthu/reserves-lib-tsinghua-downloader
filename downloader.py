@@ -12,8 +12,8 @@ from utils.pdf import generate_pdf
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/mobile/index.html'
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/mobile/index.html'
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book6/00009127/00009127000/mobile/index.html'
-# example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
 # example_URL_need_cookie = 'http://reserves.lib.tsinghua.edu.cn/books/00000398/00000398000/index.html'
+# example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
 
 
 # This may be re-written using regular expression.
@@ -26,7 +26,7 @@ def get_base_url(url: str) -> str:
     return url
 
 
-def resume_file(img_dir: str):
+def resume_file(img_dir: str) -> dict[str, list[bytes]]:
     imgs = {}
     for file in os.listdir(img_dir):
         chapter_id = file.split('_')[0]
@@ -39,7 +39,14 @@ def resume_file(img_dir: str):
     return imgs
 
 
-def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, resume=False) -> None:
+def download(
+    url: str,
+    gen_pdf: bool = True,
+    save_img: bool = True,
+    quality: int = 96,
+    concurrent: int = 6,
+    resume: bool = False,
+) -> None:
     print('Preparing...')
     url = get_base_url(url)
     sep = url[:-11].rfind('/')
@@ -60,7 +67,7 @@ def download(url: str, gen_pdf=True, save_img=True, quality=96, concurrent=6, re
         print('Resuming...')
         imgs = resume_file(img_dir)
     else:
-        imgs = claw(url, session)
+        imgs = claw(url, session, concurrent)
 
     if quality < 96:
         print('Optimizing images...')
