@@ -24,9 +24,8 @@ def claw_book4(url: str, concurrent: int, session: requests.Session):
         print(f'Clawing chapter {chapter_id}')
         time_usage = time.time()
         page_list = [
-            'http://reserves.lib.tsinghua.edu.cn' + url for url in get_file_list(
-                'http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session
-            )
+            'http://reserves.lib.tsinghua.edu.cn' + url
+            for url in get_file_list('http://reserves.lib.tsinghua.edu.cn' + chapter_url + 'files/mobile/', session)
         ]
         page_list.sort(key=lambda url: int(url[76:-4]))
 
@@ -76,6 +75,7 @@ def claw(url: str, session: requests.Session):
     imgs = {}
     while chapter_id <= 999:
         if not is_available(index_url.format(chapter_id), session):
+            # in case the index is not continuous
             for _ in range(20):
                 chapter_id += 1
                 if is_available(index_url.format(chapter_id), session):
