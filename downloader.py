@@ -99,10 +99,10 @@ if __name__ == '__main__':
     parser.add_argument('-u', '--url', type=str, help='input target URL')
     parser.add_argument('-q', '--quality', type=int, default=96, metavar='Q', help='reduce file size, [1, 96] (75 by recommendation, 96 by default)')
     parser.add_argument('-c', '--concurrent', type=int, default=6, metavar='C', help='the number of concurrent downloads (6 by default)')
-    parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='interval time between batchs in seconds')
+    parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='time interval between batchs, in seconds')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
-    parser.add_argument('--end', action='store_true', help='automatically terminate the process after finishing')
+    parser.add_argument('--end', action='store_true', help='automatically exit after finishing')
     parser.add_argument('--resume', action='store_true', help='skip downloading images')
     args = parser.parse_args()
     url = args.url
@@ -112,6 +112,7 @@ if __name__ == '__main__':
         print('GitHub Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
         print('Thanks for using. Please see README.md for help.')
         print('Try running "downloader -h" in terminal for advanced settings.')
+        print('Note: The API has a rate limit. You may use `--interval` to set time interval.')
         print('*' * 20)
         print('Made with Love :) Email: libthu@yandex.com')
         print('*' * 20)
@@ -124,15 +125,22 @@ if __name__ == '__main__':
             quality = 96
     assert (1 <= quality <= 96)
 
-    download(
-        url,
-        not args.no_pdf,
-        not args.no_img,
-        quality,
-        args.concurrent,
-        args.resume,
-        args.interval,
-    )
+    try:
+        download(
+            url,
+            not args.no_pdf,
+            not args.no_img,
+            quality,
+            args.concurrent,
+            args.resume,
+            args.interval,
+        )
+    except Exception as e:
+        print(e)
+        print('*' * 20)
+        print('An exception occurred.')
+        print('This may be due to network issues. Please try again later.')
+        print('Note: The API has a rate limit. You may use `--interval` to set time interval.')
 
     if not args.end:
-        input("Press Enter to Exit. Use `--end` to automatically exit.")  # Prevent window from closing.
+        input("Press Enter to Exit. You may use `--end` to automatically exit the process.")  # Prevent window from closing.

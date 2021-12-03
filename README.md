@@ -51,19 +51,20 @@ A: 使用学校提供的正版福昕编辑器可以进行OCR文字识别。
 Run `downloader --help` in terminal.
 
 ```
-usage: downloader.exe [-h] [--url URL] [--no-pdf] [--no-img] [--quality QUALITY] [--con CON] [--resume]
+usage: downloader.py [-h] [-u URL] [-q Q] [-c C] [-i I] [--no-pdf] [--no-img] [--end] [--resume]
 
-See README.md for help. Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader
+See README.md for help. Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader        
 
 optional arguments:
-  -h, --help         show this help message and exit
-  --url URL          input target URL
-  --no-pdf           disable generating PDF
-  --no-img           disable saving images
-  --quality QUALITY  reduce file size, [1, 96] (75 by recommendation, 96 by default)
-  --con CON          the number of concurrent downloads (6 by default)
-  --end              automatically terminate the process after finishing
-  --resume           skip downloading images (for testing)
+  -h, --help            show this help message and exit
+  -u URL, --url URL     input target URL
+  -q Q, --quality Q     reduce file size, [1, 96] (75 by recommendation, 96 by default)
+  -c C, --concurrent C  the number of concurrent downloads (6 by default)
+  -i I, --interval I    time interval between batchs, in seconds
+  --no-pdf              disable generating PDF
+  --no-img              disable saving images
+  --end                 automatically exit after finishing
+  --resume              skip downloading images
 ```
 
 希望尝鲜？从GitHub Actions中下载预览版的可执行文件！
