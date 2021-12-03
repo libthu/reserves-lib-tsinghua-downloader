@@ -1,5 +1,7 @@
 import os
 
+import requests
+
 
 def get_cookie():
     COOKIE_PATH = 'cookie.txt'
@@ -18,3 +20,8 @@ def get_cookie():
     cookie['.ASPXAUTH'] = data[0]
     cookie['ASP.NET_SessionId'] = data[1]
     return cookie
+
+
+def test_cookie(url: str, session: requests.Session):
+    ret = session.get(url)
+    print(ret.text)

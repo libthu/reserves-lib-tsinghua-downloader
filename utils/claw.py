@@ -35,13 +35,14 @@ def get_chapter_list(index_url: str, session: requests.Session) -> list[str]:
 # config.js: http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/mobile/javascript/config.js
 def get_page_cnt(url: str, session: requests.Session) -> int:
     pattern = 'bookConfig.totalPageCount=(.*?);'
-    js_url = url + '/mobile/javascript/config.js'
+    js_url = url[:-11] + '/mobile/javascript/config.js'
+    print(js_url)
     ret = session.get(js_url)
     page_cnt = int(re.search(pattern, ret.text).group(1))
     return page_cnt
 
 
-def claw(url: str, session: requests.Session, concurrent: int) -> dict[int, list[bytes]]:
+def claw(url: str, session: requests.Session, concurrent: int, interval: float) -> dict[int, list[bytes]]:
     print('Clawing...')
 
     chapter_id = int(url[-3:])
@@ -57,7 +58,7 @@ def claw(url: str, session: requests.Session, concurrent: int) -> dict[int, list
         image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         time_usage = time.time()
 
-        page_cnt = get_page_cnt(url, session)
+        page_cnt = get_page_cnt(index_url.format(chapter_id), session)
         page_list = [image_url.format(i) for i in range(1, page_cnt + 1)]
 
         img_list = concurrent_download(page_list, session, concurrent)
@@ -68,6 +69,7 @@ def claw(url: str, session: requests.Session, concurrent: int) -> dict[int, list
         total_page += page_cnt
         print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
         print('*' * 20)
+        time.sleep(interval)
 
     print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
     return imgs

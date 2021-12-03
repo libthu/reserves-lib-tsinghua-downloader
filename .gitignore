@@ -10,3 +10,4 @@ bin/build
 bin/dist
 bin/downloader.spec
 cookie.txt
+Config.js

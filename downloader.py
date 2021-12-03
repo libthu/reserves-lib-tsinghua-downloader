@@ -17,6 +17,7 @@ from utils.pdf import generate_pdf
 
 
 # This may be re-written using regular expression.
+# example output: http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000
 def get_base_url(url: str) -> str:
     assert url.startswith('http://reserves.lib.tsinghua.edu.cn/'), 'Invalid URL'
     assert url.endswith('/index.html'), 'Invalid URL'
@@ -46,6 +47,7 @@ def download(
     quality: int = 96,
     concurrent: int = 6,
     resume: bool = False,
+    interval: float = 1,
 ) -> None:
     print('Preparing...')
     url = get_base_url(url)
@@ -67,7 +69,7 @@ def download(
         print('Resuming...')
         imgs = resume_file(img_dir)
     else:
-        imgs = claw(url, session, concurrent)
+        imgs = claw(url, session, concurrent, interval)
 
     if quality < 96:
         print('Optimizing images...')
@@ -97,6 +99,7 @@ if __name__ == '__main__':
     parser.add_argument('-u', '--url', type=str, help='input target URL')
     parser.add_argument('-q', '--quality', type=int, default=96, metavar='Q', help='reduce file size, [1, 96] (75 by recommendation, 96 by default)')
     parser.add_argument('-c', '--concurrent', type=int, default=6, metavar='C', help='the number of concurrent downloads (6 by default)')
+    parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='interval time between batchs in seconds')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
     parser.add_argument('--end', action='store_true', help='automatically terminate the process after finishing')
@@ -128,7 +131,8 @@ if __name__ == '__main__':
         quality,
         args.concurrent,
         args.resume,
+        args.interval,
     )
 
     if not args.end:
-        input("Press Enter to Exit.")  # Prevent window from closing.
+        input("Press Enter to Exit. Use `--end` to automatically exit.")  # Prevent window from closing.
