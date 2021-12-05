@@ -1,3 +1,9 @@
+## 写在前面
+
+目前学校对教参平台的访问添加了速率限制，短时间内多次爬取会暂时ban IP，请过一段时间重试。
+
+设置相邻请求的间隔时间可以使用 `-i seconds` 来设置，关于命令行参数的更多帮助请 `downloader --help`
+
 # 清华教参服务平台 辅助工具
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/libthu/reserves-lib-tsinghua-downloader) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/libthu/reserves-lib-tsinghua-downloader/Release%20Test/main) ![GitHub issues](https://img.shields.io/github/issues/libthu/reserves-lib-tsinghua-downloader)
