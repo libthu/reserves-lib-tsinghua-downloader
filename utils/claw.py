@@ -36,7 +36,6 @@ def get_chapter_list(index_url: str, session: requests.Session) -> list[str]:
 def get_page_cnt(url: str, session: requests.Session) -> int:
     pattern = 'bookConfig.totalPageCount=(.*?);'
     js_url = url[:-11] + '/mobile/javascript/config.js'
-    print(js_url)
     ret = session.get(js_url)
     page_cnt = int(re.search(pattern, ret.text).group(1))
     return page_cnt
@@ -54,12 +53,12 @@ def claw(url: str, session: requests.Session, concurrent: int, interval: float) 
     imgs = {}
     chapter_list = get_chapter_list(index_url, session)
     for chapter_id in chapter_list:
-        print(f'Clawing chapter {chapter_id}')
         image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         time_usage = time.time()
 
         page_cnt = get_page_cnt(index_url.format(chapter_id), session)
         page_list = [image_url.format(i) for i in range(1, page_cnt + 1)]
+        print(f'Clawing chapter {chapter_id}, {page_cnt} pages in total.')
 
         img_list = concurrent_download(page_list, session, concurrent)
 
