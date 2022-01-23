@@ -21,6 +21,7 @@ from utils.pdf import generate_pdf
 def get_base_url(url: str) -> str:
     if url.startswith('https://'):
         url = 'http' + url[5:]
+    # using HTTP because the website's certificate somtimes expires
     assert url.startswith('http://reserves.lib.tsinghua.edu.cn/'), 'Invalid URL'
     assert url.endswith('/index.html'), 'Invalid URL'
     url = url[:-11]  # '/index.html'
@@ -98,13 +99,15 @@ def download(
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='See README.md for help. ' 'Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
-    parser.add_argument('-u', '--url', type=str, help='input target URL')
-    parser.add_argument('-q', '--quality', type=int, default=96, metavar='Q', help='reduce file size, [1, 96] (75 by recommendation, 96 by default)')
+    parser.add_argument('-u', '--url', type=str, help='input URL')
+    parser.add_argument(
+        '-q', '--quality', type=int, default=96, metavar='Q', help='the image quality, from 0 (worst) to 95 (best). 96 means no compression.'
+    )
     parser.add_argument('-c', '--concurrent', type=int, default=6, metavar='C', help='the number of concurrent downloads (6 by default)')
     parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='time interval between batchs, in seconds')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
-    parser.add_argument('--end', action='store_true', help='automatically exit after finishing')
+    parser.add_argument('--end', action='store_true', help='exit automatically after finishing')
     parser.add_argument('--resume', action='store_true', help='skip downloading images')
     args = parser.parse_args()
     url = args.url
@@ -121,7 +124,7 @@ if __name__ == '__main__':
         url = input('INPUT URL: ')
         quality = input('Reduce file size? y/[n] ')
         if quality != '' and strtobool(quality):
-            quality = input('Please input quality ratio in [1, 96] (75 by recommendation): ')
+            quality = input('Please input the image quality, from 0 (worst) to 95 (best), 75 by recommendation: ')
             quality = int(quality) if quality != '' else 75
         else:
             quality = 96
@@ -145,4 +148,4 @@ if __name__ == '__main__':
         print('Note: The API has a rate limit. You may use `--interval` to set time interval.')
 
     if not args.end:
-        input("Press Enter to Exit. You may use `--end` to automatically exit the process.")  # Prevent window from closing.
+        input("Press Enter to Exit. You may use `--end` to exit the process automatically.")  # Prevent window from closing.
