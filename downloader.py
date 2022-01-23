@@ -72,7 +72,14 @@ def download(
         print('Resuming...')
         imgs = resume_file(img_dir)
     else:
-        imgs = claw(url, session, concurrent, interval)
+        try:
+            imgs = claw(url, session, concurrent, interval)
+        except Exception as e:
+            print(e)
+            print('*' * 20)
+            print('An exception occurred.')
+            print('This may be due to network issues. Please try again later.')
+            print('Note: The API has a rate limit. You may use `--interval` to set time interval.')
 
     if quality < 96:
         print('Optimizing images...')
@@ -130,22 +137,7 @@ if __name__ == '__main__':
             quality = 96
     assert (1 <= quality <= 96)
 
-    try:
-        download(
-            url,
-            not args.no_pdf,
-            not args.no_img,
-            quality,
-            args.concurrent,
-            args.resume,
-            args.interval,
-        )
-    except Exception as e:
-        print(e)
-        print('*' * 20)
-        print('An exception occurred.')
-        print('This may be due to network issues. Please try again later.')
-        print('Note: The API has a rate limit. You may use `--interval` to set time interval.')
+    download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.resume, args.interval)
 
     if not args.end:
         input("Press Enter to Exit. You may use `--end` to exit the process automatically.")  # Prevent window from closing.
