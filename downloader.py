@@ -19,7 +19,9 @@ from utils.pdf import generate_pdf
 # This may be re-written using regular expression.
 # example output: http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000
 def get_base_url(url: str) -> str:
-    assert (url.startswith('http://reserves.lib.tsinghua.edu.cn/') or url.startswith('https://reserves.lib.tsinghua.edu.cn/')), 'Invalid URL'
+    if url.startswith('https://'):
+        url = 'http' + url[5:]
+    assert url.startswith('http://reserves.lib.tsinghua.edu.cn/'), 'Invalid URL'
     assert url.endswith('/index.html'), 'Invalid URL'
     url = url[:-11]  # '/index.html'
     if url.endswith('mobile'):
