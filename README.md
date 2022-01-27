@@ -38,11 +38,11 @@ MacOS上的第一次启动可能会有点慢。
 
 **Q:** 图片压缩的`quality`应该怎样设置？
 
-A: 范围[1, 96]：其中96为不压缩，[1, 95]从最差到最佳。
+A: 范围[1, 96]：其中96为原图，[1, 95]从最差到最佳。
 
 **Q:** 运行报错`Cookie Required`，怎么办？
 
-A: 经测试，绝大部分教参无需`cookie`即可访问。少数教参需要`cookie`进行身份验证，请将网站`cookie`中，`.ASPXAUTH`和`ASP.NET_SessionId`的值依次写入`cookie.txt`中，每行一个。（我将会完善获取网站`cookie`的相关教程。若急需，请与我发邮件）
+A: 经测试，绝大部分教参无需`cookie`即可访问。少数教参需要`cookie`进行身份验证，请将网站`cookie`中，`.ASPXAUTH`和`ASP.NET_SessionId`的值依次写入同目录下`cookie.txt`中，每行一个。（我将会完善获取网站`cookie`的相关教程。若急需，请与我发邮件）
 
 **Q:** 下载的章节不全？
 
@@ -64,7 +64,7 @@ See README.md for help. Repo: https://github.com/libthu/reserves-lib-tsinghua-do
 optional arguments:
   -h, --help            show this help message and exit
   -u URL, --url URL     input URL
-  -q Q, --quality Q     the image quality, from 0 (worst) to 95 (best). 96 means no compression.
+  -q Q, --quality Q     the image quality, from 0 (worst) to 95 (best). 96 keeps images unchanged.
   -c C, --concurrent C  the number of concurrent downloads (6 by default)
   -i I, --interval I    time interval between batchs, in seconds
   --no-pdf              disable generating PDF
@@ -90,5 +90,7 @@ optional arguments:
 ---
 
 *仅供Python语言的学习参考，请勿用于非法用途！*
+
+友情链接：
 
 更多清华常用信息/服务汇总请看[这里](https://github.com/ZenithalHourlyRate/thuservices)。
