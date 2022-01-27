@@ -108,7 +108,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(description='See README.md for help. ' 'Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader')
     parser.add_argument('-u', '--url', type=str, help='input URL')
     parser.add_argument(
-        '-q', '--quality', type=int, default=96, metavar='Q', help='the image quality, from 0 (worst) to 95 (best). 96 means no compression.'
+        '-q', '--quality', type=int, default=96, metavar='Q', help='the image quality, from 0 (worst) to 95 (best). 96 keeps images unchanged.'
     )
     parser.add_argument('-c', '--concurrent', type=int, default=6, metavar='C', help='the number of concurrent downloads (6 by default)')
     parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='time interval between batchs, in seconds')
