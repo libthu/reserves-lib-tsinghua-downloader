@@ -26,8 +26,6 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 **此程序无需登录即可使用**。
 
-![image.png](https://s2.loli.net/2022/01/10/M6UvrRf72xOW3wS.png)
-
 ### MacOS
 
 MacOS用户可能无法直接运行下载的`downloader`，是因为它没有被标记为“可执行的”。
