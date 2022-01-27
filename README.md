@@ -6,7 +6,7 @@
 
 # 清华教参服务平台 辅助工具
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/libthu/reserves-lib-tsinghua-downloader) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/libthu/reserves-lib-tsinghua-downloader/Release%20Test/main) ![GitHub issues](https://img.shields.io/github/issues/libthu/reserves-lib-tsinghua-downloader)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/libthu/reserves-lib-tsinghua-downloader) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/libthu/reserves-lib-tsinghua-downloader/Release%20Test?label=test) ![GitHub issues](https://img.shields.io/github/issues/libthu/reserves-lib-tsinghua-downloader)
 
 Download pages from http://reserves.lib.tsinghua.edu.cn/
 
