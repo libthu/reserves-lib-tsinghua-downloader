@@ -28,7 +28,9 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 ### MacOS
 
-MacOS用户可能无法直接运行下载的`downloader`，是因为它没有被标记为“可执行的”。
+**NOTE**：可执行文件可能无法在macOS Monterey运行，正在修复。
+
+MacOS用户可能无法直接运行下载的`downloader`，是因为它没有“执行权限”。
 
 解决方法：在终端中进入`downloader`文件所在的文件夹，执行`chmod +x downloader`命令。有关此命令的更多帮助请参阅[Apple](https://support.apple.com/zh-cn/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac)。
 
@@ -77,6 +79,7 @@ optional arguments:
 
 ## TODO
 
+- Fix executable on macOS
 - tqdm
 - Fetch pure text from website
 - PDF Bookmark
