@@ -140,4 +140,5 @@ if __name__ == '__main__':
     download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.resume, args.interval)
 
     if not args.end:
-        input("Press Enter to Exit. You may use `--end` to exit the process automatically.")  # Prevent window from closing.
+        # Prevent window from closing.
+        input("Press Enter to Exit. You may use `--end` to exit the process automatically.")
