@@ -12,13 +12,15 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 自动下载书籍每一页的原图，生成PDF，免登录。
 
+![command.png](https://s2.loli.net/2022/01/23/utwNI73z15T4OLS.png)
+
 ## Download
 
 从[Releases](https://github.com/libthu/reserves-lib-tsinghua-downloader/releases/latest)，下载`Assets`中对应系统的可执行文件。或运行Python脚本`downloader.py`。
 
 ## Usage
 
-![image.png](https://s2.loli.net/2022/01/23/utwNI73z15T4OLS.png)
+![website.png](https://i.loli.net/2021/03/08/zVAYweuK7cHk5os.png)
 
 运行`downloader`，输入网站“`阅读全文`”之下的链接地址（如图中标黄的位置）。程序会自动爬取当前章节以下的所有章节。
 
