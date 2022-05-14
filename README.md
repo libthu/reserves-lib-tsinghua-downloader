@@ -32,11 +32,15 @@ Use at your own risk.
 
 ### MacOS
 
-**NOTE**：可执行文件可能无法在 macOS Monterey 运行，正在修复。
+MacOS 用户可能无法直接运行下载的`downloader`，可能有两种原因：
 
-MacOS 用户可能无法直接运行下载的`downloader`，是因为它没有“执行权限”。
+- 因为它没有“执行权限”。
 
-解决方法：在终端中进入`downloader`文件所在的文件夹，执行`chmod +x downloader`命令。有关此命令的更多帮助请参阅[Apple](https://support.apple.com/zh-cn/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac)。
+  解决方法：在终端中进入`downloader`文件所在的文件夹，执行`chmod +x downloader`命令。有关此命令的更多帮助请参阅[Apple](https://support.apple.com/zh-cn/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac)。
+
+- 因为它不是从 App Store 下载的。
+
+  解决方法：通过点击“**安全性与隐私**”设置中“**通用**”面板上的“**仍要打开**”按钮来允许被阻止的 App。此按钮在您尝试打开该 App 后一小时内可用。更多帮助请参阅[Apple](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)。
 
 MacOS 上的第一次启动可能会有点慢。
 
@@ -87,7 +91,6 @@ optional arguments:
 
 ## TODO
 
-- Fix executable on macOS
 - tqdm
 - Fetch pure text from website
 - PDF Bookmark
