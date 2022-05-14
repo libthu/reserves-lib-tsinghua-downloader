@@ -114,7 +114,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='time interval between batchs, in seconds')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
-    parser.add_argument('--end', action='store_true', help='exit automatically after finishing')
+    parser.add_argument('--exit', action='store_true', help='exit automatically after finishing')
     parser.add_argument('--resume', action='store_true', help='skip downloading images')
     args = parser.parse_args()
     url = args.url
@@ -139,6 +139,6 @@ if __name__ == '__main__':
 
     download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.resume, args.interval)
 
-    if not args.end:
+    if not args.exit:
         # Prevent window from closing.
-        input("Press Enter to Exit. You may use `--end` to exit the process automatically.")
+        input("Press Enter to Exit. You may use `--exit` to exit the process automatically.")
