@@ -67,7 +67,7 @@ A: 使用学校提供的正版福昕编辑器可以进行 OCR。
 Run `downloader --help` in terminal.
 
 ```
-usage: downloader.py [-h] [-u URL] [-q Q] [-c C] [-i I] [--no-pdf] [--no-img] [--end] [--resume]
+usage: downloader.py [-h] [-u URL] [-q Q] [-c C] [-i I] [--no-pdf] [--no-img] [--exit] [--resume]
 
 See README.md for help. Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader
 
@@ -75,11 +75,11 @@ optional arguments:
   -h, --help            show this help message and exit
   -u URL, --url URL     input URL
   -q Q, --quality Q     the image quality, from 0 (worst) to 95 (best). 96 keeps images unchanged.
-  -c C, --concurrent C  the number of concurrent downloads (6 by default)
+  -c C, --concurrent C  the number of concurrent downloads (4 by default)
   -i I, --interval I    time interval between batchs, in seconds
   --no-pdf              disable generating PDF
   --no-img              disable saving images
-  --end                 exit automatically after finishing
+  --exit                exit automatically after finishing
   --resume              skip downloading images
 ```
 
