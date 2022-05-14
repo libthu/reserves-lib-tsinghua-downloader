@@ -45,12 +45,12 @@ def resume_file(img_dir: str) -> dict[str, list[bytes]]:
 
 def download(
     url: str,
-    gen_pdf: bool,
-    save_img: bool,
-    quality: int,
-    concurrent: int,
-    resume: bool,
-    interval: float,
+    gen_pdf: bool = True,
+    save_img: bool = True,
+    quality: int = 96,
+    concurrent: int = 4,
+    resume: bool = False,
+    interval: float = 1,
 ) -> None:
     print('Preparing...')
     url = get_base_url(url)
