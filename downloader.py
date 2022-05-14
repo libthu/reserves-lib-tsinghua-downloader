@@ -45,12 +45,12 @@ def resume_file(img_dir: str) -> dict[str, list[bytes]]:
 
 def download(
     url: str,
-    gen_pdf: bool = True,
-    save_img: bool = True,
-    quality: int = 96,
-    concurrent: int = 6,
-    resume: bool = False,
-    interval: float = 1,
+    gen_pdf: bool,
+    save_img: bool,
+    quality: int,
+    concurrent: int,
+    resume: bool,
+    interval: float,
 ) -> None:
     print('Preparing...')
     url = get_base_url(url)
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-q', '--quality', type=int, default=96, metavar='Q', help='the image quality, from 0 (worst) to 95 (best). 96 keeps images unchanged.'
     )
-    parser.add_argument('-c', '--concurrent', type=int, default=6, metavar='C', help='the number of concurrent downloads (6 by default)')
+    parser.add_argument('-c', '--concurrent', type=int, default=4, metavar='C', help='the number of concurrent downloads (4 by default)')
     parser.add_argument('-i', '--interval', type=float, default=1, metavar='I', help='time interval between batchs, in seconds')
     parser.add_argument('--no-pdf', action='store_true', help='disable generating PDF')
     parser.add_argument('--no-img', action='store_true', help='disable saving images')
