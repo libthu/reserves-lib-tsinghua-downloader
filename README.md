@@ -30,9 +30,9 @@ Use at your own risk.
 
 **此程序无需登录即可使用**。
 
-### MacOS
+### macOS
 
-MacOS 用户可能无法直接运行下载的`downloader`，可能有两种原因：
+macOS 用户可能无法直接运行下载的`downloader`，可能有两种原因：
 
 - 因为它没有“执行权限”。
 
@@ -42,7 +42,7 @@ MacOS 用户可能无法直接运行下载的`downloader`，可能有两种原�
 
   解决方法：通过点击“**安全性与隐私**”设置中“**通用**”面板上的“**仍要打开**”按钮来允许被阻止的 App。此按钮在您尝试打开该 App 后一小时内可用。更多帮助请参阅[Apple](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)。
 
-MacOS 上的第一次启动可能会有点慢。
+macOS 上的第一次启动可能会有点慢。
 
 ## Q&A
 
