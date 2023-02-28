@@ -60,15 +60,14 @@ def claw(url: str, session: requests.Session, concurrent: int, interval: float) 
         page_list = [image_url.format(i) for i in range(1, page_cnt + 1)]
         print(f'Clawing chapter {chapter_id}, {page_cnt} pages in total.')
 
-        img_list = concurrent_download(page_list, session, concurrent)
-
+        img_list = concurrent_download(page_list, session, concurrent, interval)
         imgs[chapter_id] = img_list
+
         time_usage = time.time() - time_usage
         total_time += time_usage
         total_page += page_cnt
         print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
-        print('*' * 20)
-        time.sleep(interval)
+        print('*' * 30)
 
     print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
     return imgs
