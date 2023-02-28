@@ -18,7 +18,7 @@ Download pages from http://reserves.lib.tsinghua.edu.cn/
 
 程序会将图片保存在 `clawed` 文件夹下，并自动生成 PDF。
 
-![command.png](https://s2.loli.net/2022/01/23/utwNI73z15T4OLS.png)
+![image.png](https://s2.loli.net/2023/02/28/JNfP4Sk7HuLhapz.png)
 
 ### macOS
 
@@ -30,15 +30,13 @@ macOS 用户可能无法直接运行下载的 `downloader`，可能有两种原�
 
 - 因为它不是从 App Store 下载的。
 
-  解决方法：通过点击“**安全性与隐私**”设置中“**通用**”面板上的“**仍要打开**”按钮来允许被阻止的 App。此按钮在您尝试打开该 App 后一小时内可用。更多帮助请参阅 [Apple](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)。
-
-macOS 上的第一次启动可能会有点慢。
+  解决方法：点击“**安全性与隐私**” -> “**通用**” -> “**仍要打开**”按钮来允许被阻止的 App。此按钮在您尝试打开该 App 后一小时内可用。更多帮助请参阅 [Apple](https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac)。
 
 ## Q&A
 
 **Q:** 图片压缩的 `quality` 选项应该怎样设置？
 
-A: 范围 [1, 96]：其中 96 为不压缩（默认），[1, 95]从最差到最佳。更多信息请参见[文档](https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html?#jpeg)。
+A: 范围 [1, 96]：其中 96 为不压缩（默认），[1, 95]从最差到最佳。更多信息请参见[PIL 文档](https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html?#jpeg)。
 
 **Q:** 运行时报错 `'type' object is not subscriptable`，怎么办？
 
@@ -46,7 +44,7 @@ A: 请升级 Python 版本至 **3.9+**，或直接运行分发的可执行文件
 
 **Q:** 运行时报错 `Cookie Required`，怎么办？
 
-A: 经测试，绝大部分教参无需 `cookie` 即可访问。少数教参需要 `cookie` 进行身份验证，请将网站 `cookie` 中，`.ASPXAUTH` 和 `ASP.NET_SessionId` 的值依次写入同目录下 `cookie.txt` 中，每行一个。（我将会完善获取网站 `cookie` 的相关教程。若急需，请与我发邮件）
+A: 经测试，绝大部分教参无需 cookie 即可访问。少数教参需要 cookie 进行身份验证，请将网站 cookie 中 `.ASPXAUTH` 和 `ASP.NET_SessionId` 的值依次写入同目录下 `cookie.txt` 中，每行一个。（我将会完善获取网站 `cookie` 的相关教程）
 
 **Q:** 下载的章节不全？
 
@@ -58,33 +56,35 @@ A: 目前学校对教参平台的访问添加了**速率限制**，短时间内�
 
 **Q:** 分享一些高级玩法？
 
-A: 使用学校提供的正版福昕编辑器可以对 PDF 进行 OCR。
-
-A: 从 GitHub Actions 中可以下载预览版的可执行文件。
+- 使用学校提供的正版福昕编辑器可以对 PDF 进行 OCR。
+- Z-Library 无法正常访问，使用谷歌搜索 `zlib searcher` 有惊喜。
+- 从 GitHub Actions 中可以下载预览版的可执行文件。
 
 ## Advanced Settings
 
 Run `downloader --help` in terminal.
 
 ```
-usage: downloader.py [-h] [-u URL] [-q Q] [-c C] [-i I] [--no-pdf] [--no-img] [--exit] [--resume]
+usage: downloader.py [-h] [-v] [-u URL] [-c C] [-i I] [-q Q] [-r] [-e] [--no-pdf] [--no-img]
 
 See README.md for help. Repo: https://github.com/libthu/reserves-lib-tsinghua-downloader
 
 optional arguments:
   -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
   -u URL, --url URL     input URL
-  -q Q, --quality Q     the image quality, from 0 (worst) to 95 (best). 96 keeps images unchanged.
   -c C, --concurrent C  the number of concurrent downloads (4 by default)
-  -i I, --interval I    time interval between batchs, in seconds
-  --no-pdf              disable generating PDF
-  --no-img              disable saving images
-  --exit                exit automatically after finishing
-  --resume              skip downloading images
+  -i I, --interval I    the time interval between batchs, in seconds (0.5 by default)
+  -q Q, --quality Q     the image quality, from 0 (worst) to 95 (best). 96 keeps images unchanged.
+  -r, --resume          skip downloading images
+  -e, --exit            exit automatically when done
+  --no-pdf              do not generate PDF
+  --no-img              do not save images
 ```
 
 ## TODO
 
+- Translation
 - Import tqdm
 - Fetch pure text from the website
 - PDF bookmark
