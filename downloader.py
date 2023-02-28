@@ -18,7 +18,7 @@ __version__ = '3.2.0'
 # example_image_URL = 'http://reserves.lib.tsinghua.edu.cn/book4/00013082/00013082000/files/mobile/1.jpg'
 
 
-# This may be re-written using regular expression.
+# this may be re-written using regular expression.
 # example output: http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000
 def get_base_url(url: str) -> str:
     if url.startswith('https://'):
@@ -36,8 +36,7 @@ def resume_file(img_dir: str) -> dict[str, list[bytes]]:
     imgs = {}
     for file in os.listdir(img_dir):
         chapter_id = file.split('_')[0]
-        with open(f'{img_dir}/{file}', 'rb') as f:
-            img = f.read()
+        img = open(f'{img_dir}/{file}', 'rb').read()
         try:
             imgs[chapter_id].append(img)
         except KeyError:
@@ -66,8 +65,7 @@ def download(
     session = requests.session()
     session.cookies = requests.utils.cookiejar_from_dict(cookie)
     session.headers.update({
-        'user-agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.57'
     })
 
     if resume:
