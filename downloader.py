@@ -50,8 +50,8 @@ def download(
     save_img: bool = True,
     quality: int = 96,
     concurrent: int = 4,
-    resume: bool = False,
     interval: float = 0.5,
+    resume: bool = False,
 ) -> None:
     print('Preparing...')
     url = get_base_url(url)
@@ -93,7 +93,7 @@ def download(
             for i, img in enumerate(img_list):
                 with open(img_dir + f'/{chapter_id}_{i:04d}.jpg', 'wb') as file:
                     file.write(img)
-        print(f'Image folder path: {img_dir}')
+        print(f'Image directory: {img_dir}')
 
     if gen_pdf:
         print('Generating PDF...')
@@ -144,7 +144,7 @@ if __name__ == '__main__':
             quality = 96
     assert (1 <= quality <= 96)
 
-    download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.resume, args.interval)
+    download(url, not args.no_pdf, not args.no_img, quality, args.concurrent, args.interval, args.resume)
 
     if not args.exit:
         # prevent the window from closing
