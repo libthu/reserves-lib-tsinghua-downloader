@@ -10,7 +10,7 @@ def get_cookie():
     if not os.path.exists(COOKIE_PATH):
         print('Cookie Required.')
         print('See README.md for help.')
-        print('*' * 20)
+        print('*' * 30)
         raise FileNotFoundError(f'No such file: "{COOKIE_PATH}"')
     with open(COOKIE_PATH) as f:
         data = [v.strip() for v in f.read().splitlines()]
