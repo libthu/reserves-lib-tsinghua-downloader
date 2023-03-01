@@ -19,7 +19,7 @@ def get_chapter_list(index_url: str, session: requests.Session) -> list[str]:
     chapter_list = []
     while True:
         if not is_available(index_url.format(id), session):
-            # In case the index is not continuous.
+            # in case the index is not continuous.
             for _ in range(10):
                 id += 1
                 if is_available(index_url.format(id), session):
@@ -42,16 +42,17 @@ def get_page_cnt(url: str, session: requests.Session) -> int:
 
 
 def claw(url: str, session: requests.Session, concurrent: int, interval: float) -> dict[int, list[bytes]]:
-    print('Clawing...')
 
     chapter_id = int(url[-3:])
     index_url = url[:-3] + '{:03d}/index.html'
     image_base_url = 'http://' + url[7:-3].replace('//', '/')
 
+    print('Clawing chapters...')
+    chapter_list = get_chapter_list(index_url, session)
+
     total_page = 0
     total_time = 0
     imgs = {}
-    chapter_list = get_chapter_list(index_url, session)
     for chapter_id in chapter_list:
         image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
         time_usage = time.time()

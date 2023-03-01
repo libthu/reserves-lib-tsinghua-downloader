@@ -3,6 +3,7 @@ import time
 
 import aiohttp
 import requests
+from tqdm import tqdm
 
 
 async def fetch(url: str, session: aiohttp.ClientSession, order: int) -> tuple[bytes, int]:
@@ -31,9 +32,14 @@ def concurrent_download(url_list: list[str], session: requests.Session, concurre
     urls_generator = (url_list[i:i + concurrent] for i in range(0, len(url_list), concurrent))
 
     img_list = []
-    for urls in urls_generator:
-        img_list += asyncio.run(fetch_concurrent(urls, cookies, headers))
-        print(f'Downloaded Page #{len(img_list)}\r', end='', flush=True)
-        time.sleep(interval)
+    # for urls in urls_generator:
+    #     img_list += asyncio.run(fetch_concurrent(urls, cookies, headers))
+    #     print(f'Downloaded Page #{len(img_list)}\r', end='', flush=True)
+    #     time.sleep(interval)
+    with tqdm(total=len(url_list), desc='Downloading', unit='page', ncols=100) as pbar:
+        for urls in urls_generator:
+            img_list += asyncio.run(fetch_concurrent(urls, cookies, headers))
+            pbar.update(len(urls))
+            time.sleep(interval)
 
     return img_list

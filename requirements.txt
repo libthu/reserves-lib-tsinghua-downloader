@@ -1,4 +1,5 @@
-requests
 aiohttp
-pillow
 img2pdf
+pillow
+requests
+tqdm
