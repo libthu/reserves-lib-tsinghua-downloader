@@ -1,3 +1,5 @@
+写在前面：有同学报告了下载缓慢的情况，我们建议更换网络环境或耐心等待。解决方案正在调查中 #3
+
 # 清华教参服务平台 辅助工具
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/libthu/reserves-lib-tsinghua-downloader) ![Python version](https://img.shields.io/badge/python-3.9%2B-blue) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/libthu/reserves-lib-tsinghua-downloader/release-test.yml?label=test) ![GitHub issues](https://img.shields.io/github/issues/libthu/reserves-lib-tsinghua-downloader)
