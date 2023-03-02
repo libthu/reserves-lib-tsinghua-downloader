@@ -67,8 +67,6 @@ def claw(url: str, session: requests.Session, concurrent: int, interval: float) 
         time_usage = time.time() - time_usage
         total_time += time_usage
         total_page += page_cnt
-        print(f'Clawed {len(img_list)} pages, time usage:{time_usage: .3f}s')
-        print('*' * 30)
 
     print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
     return imgs
