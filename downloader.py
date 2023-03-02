@@ -9,7 +9,7 @@ from utils.cookie import get_cookie
 from utils.image import resize
 from utils.pdf import generate_pdf
 
-__version__ = '3.2.0'
+__version__ = '3.2.1'
 
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book4//00013082/00013082000/mobile/index.html'
 # example_URL = 'http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/mobile/index.html'

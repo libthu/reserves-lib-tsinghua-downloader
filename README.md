@@ -87,7 +87,6 @@ optional arguments:
 ## TODO
 
 - Translation
-- Import tqdm
 - Fetch pure text from the website
 - PDF bookmark
 
