@@ -46,7 +46,7 @@ A: 请升级 Python 版本至 **3.9+**，或直接运行分发的可执行文件
 
 **Q:** 运行时报错 `Cookie Required`，怎么办？
 
-A: 经测试，绝大部分教参无需 cookie 即可访问。少数教参需要 cookie 进行身份验证，请将网站 cookie 中 `.ASPXAUTH` 和 `ASP.NET_SessionId` 的值依次写入同目录下 `cookie.txt`，每行一个。获取 cookie 的方法请见 [#4](https://github.com/libthu/reserves-lib-tsinghua-downloader/issues/4)
+A: 经测试，绝大部分教参无需 cookie 即可访问。少数教参需要 cookie 进行身份验证，请将网站 cookie 中 `.ASPXAUTH` 和 `ASP.NET_SessionId` 的值依次写入同目录下 `cookie.txt`，每行一个。获取 cookie 的方法请见 [#4](https://github.com/libthu/reserves-lib-tsinghua-downloader/issues/5)
 
 **Q:** 下载的章节不全？
 
