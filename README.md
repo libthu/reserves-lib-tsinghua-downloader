@@ -1,4 +1,4 @@
-写在前面：有同学报告了下载缓慢的情况，我们建议更换网络环境（使用校园网）或耐心等待。解决方案正在调查中 [#3](https://github.com/libthu/reserves-lib-tsinghua-downloader/issues/3)
+写在前面：Looking for maintainers. Please contact libthu (a) yandex.com if you are interested!
 
 # 清华教参服务平台 辅助工具
 
