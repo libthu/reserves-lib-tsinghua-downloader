@@ -4,19 +4,27 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/libthu/reserves-lib-tsinghua-downloader) ![Python version](https://img.shields.io/badge/python-3.9%2B-blue) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/libthu/reserves-lib-tsinghua-downloader/release-test.yml?label=test) ![GitHub issues](https://img.shields.io/github/issues/libthu/reserves-lib-tsinghua-downloader)
 
-Download pages from http://reserves.lib.tsinghua.edu.cn/
+Download pages from https://ereserves.lib.tsinghua.edu.cn/
 
-下载书籍每一页的原图，生成 PDF，免登录。
+下载书籍每一页的原图，生成 PDF，需要登录获取 Token 才能正常使用。
 
 ## Download
 
 从 [Releases](https://github.com/libthu/reserves-lib-tsinghua-downloader/releases/latest) 的 `Assets` 中，下载对应系统的可执行文件。或运行 Python 脚本 `downloader.py`。
 
+## Token
+
+由于新版教参平台使用 SSO 单点登录，需要自行在网页上登录并获得 Token 才能访问资源。
+
+![login.png](https://s2.loli.net/2024/09/13/xFezwadpABgl2tZ.png)
+
+通过统一身份认证登录后，在主页用 F12 或 Ctrl-Shift-I 打开开发者工具。进入“控制台”或“Console”选项卡，运行 `localStorage.License` 获取 Token。 将 Token 保存在同一目录下的 `Token.txt` 文件中。**Token 的有效期为 1 个小时，如果过期需要重新登录。**
+
 ## Usage
 
-![website.png](https://i.loli.net/2021/03/08/zVAYweuK7cHk5os.png)
+![bookinfo.png](https://s2.loli.net/2024/09/12/2dXCsKD4SMnu9ix.png)
 
-运行 `downloader`，输入网站“`阅读全文`”之下的链接地址（如图中标黄的位置）。程序会自动爬取当前章节以下的所有章节。
+运行 `downloader`，输入网站教参详情的地址（如图中标黄的位置）。程序会自动爬取对应书籍。
 
 程序会将图片保存在 `clawed` 文件夹下，并自动生成 PDF。
 
@@ -44,13 +52,13 @@ A: 范围 [1, 96]：其中 96 为不压缩（默认），[1, 95]从最差到最�
 
 A: 请升级 Python 版本至 **3.9+**，或直接运行分发的可执行文件。
 
-**Q:** 运行时报错 `Cookie Required`，怎么办？
+<!-- **Q:** 运行时报错 `Cookie Required`，怎么办？
 
-A: 经测试，绝大部分教参无需 cookie 即可访问。少数教参需要 cookie 进行身份验证，请将网站 cookie 中 `.ASPXAUTH` 和 `ASP.NET_SessionId` 的值依次写入同目录下 `cookie.txt`，每行一个。获取 cookie 的方法请见 [#5](https://github.com/libthu/reserves-lib-tsinghua-downloader/issues/5)
+A: 经测试，绝大部分教参无需 cookie 即可访问。少数教参需要 cookie 进行身份验证，请将网站 cookie 中 `.ASPXAUTH` 和 `ASP.NET_SessionId` 的值依次写入同目录下 `cookie.txt`，每行一个。获取 cookie 的方法请见 [#5](https://github.com/libthu/reserves-lib-tsinghua-downloader/issues/5) -->
 
-**Q:** 下载的章节不全？
+<!-- **Q:** 下载的章节不全？
 
-A: 这是因为此图书的章节编号不连续。请再次运行程序并输入下一位置的章节链接。通常不会出现此情况。
+A: 这是因为此图书的章节编号不连续。请再次运行程序并输入下一位置的章节链接。通常不会出现此情况。 -->
 
 **Q:** 下载突然失败了？
 
