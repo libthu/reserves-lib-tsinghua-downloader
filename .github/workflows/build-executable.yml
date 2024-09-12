@@ -31,7 +31,7 @@ jobs:
           pyinstaller --onefile --icon bin/logo.ico downloader.py
           cp README.md dist/
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: downloader-${{ matrix.os }}-py${{ env.python-version }}
           path: |
