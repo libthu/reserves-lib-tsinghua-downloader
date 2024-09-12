@@ -9,7 +9,7 @@ from utils.token import get_token
 from utils.image import resize
 from utils.pdf import generate_pdf
 
-__version__ = "3.2.1"
+__version__ = "4.0.0"
 
 # example_URL = 'https://ereserves.lib.tsinghua.edu.cn/bookDetail/092404F541465700E065000000000001'
 
