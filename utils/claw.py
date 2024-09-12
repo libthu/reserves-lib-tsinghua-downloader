@@ -1,72 +1,69 @@
 import time
-import re
-
 import requests
-
 from utils.concurrent import concurrent_download
+from bs4 import BeautifulSoup
 
 
-def is_available(url: str, session: requests.Session) -> bool:
-    ret = session.get(url)
-    if 'safedog' in ret.text:
-        return False
-    else:
-        return True
+def get_chapter_list(scanid: str, session: requests.Session) -> list:
+    url = "https://ereserves.lib.tsinghua.edu.cn/readkernel/KernelAPI/BookInfo/selectJgpBookChapters"
+    ret = session.post(url, data={"SCANID": scanid}).json()
+    if ret["code"] != 1:
+        raise Exception("Please renew your token.")
+    chapters = ret["data"]
+    return chapters
 
 
-def get_chapter_list(index_url: str, session: requests.Session) -> list[str]:
-    id = 0
-    chapter_list = []
-    while True:
-        if not is_available(index_url.format(id), session):
-            # in case the index is not continuous.
-            for _ in range(10):
-                id += 1
-                if is_available(index_url.format(id), session):
-                    break
-            else:
-                break
-        chapter_list.append(id)
-        id += 1
-    return chapter_list
+def claw(
+    bookid: str, session: requests.Session, concurrent: int, interval: float
+) -> dict[int, list[bytes]]:
+    ret = session.get(
+        "https://ereserves.lib.tsinghua.edu.cn/userapi/MyBook/getBookDetail?bookId="
+        + bookid
+    ).json()
+    if ret["code"] != 1:
+        raise Exception("Please renew your token.")
+    bookname = ret["data"]["jc_ebook_vo"]["EBOOKNAME"]
+    readid = ret["data"]["jc_ebook_vo"]["urls"][0]["READURL"]
+    print("Bookname:", bookname)
 
+    ret = session.post(
+        "https://ereserves.lib.tsinghua.edu.cn/userapi/ReadBook/GetResourcesUrl",
+        json={"id": readid},
+    ).json()
+    if ret["code"] != 1:
+        raise Exception("Please renew your token.")
+    ret = session.get(ret["data"])
+    scanid = BeautifulSoup(ret.text, "html.parser").find("input", {"id": "scanid"})[
+        "value"
+    ]
 
-# example_URL = 'http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/mobile/index.html'
-# config.js: http://reserves.lib.tsinghua.edu.cn/book5//00001471/00001471000/mobile/javascript/config.js
-def get_page_cnt(url: str, session: requests.Session) -> int:
-    pattern = 'bookConfig.totalPageCount=(.*?);'
-    js_url = url[:-11] + '/mobile/javascript/config.js'
-    ret = session.get(js_url)
-    page_cnt = int(re.search(pattern, ret.text).group(1))
-    return page_cnt
+    BotuReadKernel = session.cookies.get("BotuReadKernel")
+    session.headers.update({"BotuReadKernel": BotuReadKernel})
 
-
-def claw(url: str, session: requests.Session, concurrent: int, interval: float) -> dict[int, list[bytes]]:
-
-    chapter_id = int(url[-3:])
-    index_url = url[:-3] + '{:03d}/index.html'
-    image_base_url = 'http://' + url[7:-3].replace('//', '/')
-
-    print('Clawing chapters...')
-    chapter_list = get_chapter_list(index_url, session)
+    print("Clawing chapters...")
+    chapter_list = get_chapter_list(scanid, session)
 
     total_page = 0
     total_time = 0
     imgs = {}
-    for chapter_id in chapter_list:
-        image_url = image_base_url + f'{chapter_id:03d}/files/mobile/{{}}.jpg'
+    for i, chapter in enumerate(chapter_list):
         time_usage = time.time()
 
-        page_cnt = get_page_cnt(index_url.format(chapter_id), session)
-        page_list = [image_url.format(i) for i in range(1, page_cnt + 1)]
-        print(f'Clawing chapter {chapter_id}, {page_cnt} pages in total.')
+        url = "https://ereserves.lib.tsinghua.edu.cn/readkernel/KernelAPI/BookInfo/selectJgpBookChapter"
+        ret = session.post(url, data={"EMID": chapter["EMID"], "BOOKID": bookid}).json()
+        if ret["code"] != 1:
+            raise Exception("Please renew your token.")
+
+        page_list = ret["data"]["JGPS"]
+        page_cnt = len(page_list)
+        print(f"Clawing chapter {i}, {page_cnt} pages in total.")
 
         img_list = concurrent_download(page_list, session, concurrent, interval)
-        imgs[chapter_id] = img_list
+        imgs[i] = img_list
 
         time_usage = time.time() - time_usage
         total_time += time_usage
         total_page += page_cnt
 
-    print(f'Clawed {total_page} pages in total, time usage:{total_time: .3f}s')
+    print(f"Clawed {total_page} pages in total, time usage:{total_time: .3f}s")
     return imgs

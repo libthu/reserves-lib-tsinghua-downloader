@@ -11,4 +11,5 @@ bin/build
 bin/dist
 bin/downloader.spec
 cookie.txt
+token.txt
 Config.js
