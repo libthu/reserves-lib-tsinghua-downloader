@@ -18,7 +18,7 @@ Download pages from https://ereserves.lib.tsinghua.edu.cn/
 
 ![login.png](https://s2.loli.net/2024/09/13/xFezwadpABgl2tZ.png)
 
-通过统一身份认证登录后，在主页用 F12 或 Ctrl-Shift-I 打开开发者工具。进入“控制台”或“Console”选项卡，运行 `localStorage.License` 获取 Token。 将 Token 保存在同一目录下的 `Token.txt` 文件中。**Token 的有效期为 1 个小时，如果过期需要重新登录。**
+通过统一身份认证登录后，在主页用 F12 或 Ctrl-Shift-I 打开开发者工具。进入“控制台”或“Console”选项卡，运行 `localStorage.License` 获取 Token。 将 Token 保存在同一目录下的 `token.txt` 文件中。**Token 的有效期为 1 个小时，如果过期需要重新登录。**
 
 ## Usage
 
