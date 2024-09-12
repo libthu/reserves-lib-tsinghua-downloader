@@ -16,9 +16,9 @@ jobs:
     env:
       python-version: 3.9
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ env.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python-version }}
       - name: Install dependencies
@@ -31,7 +31,7 @@ jobs:
           pyinstaller --onefile --icon bin/logo.ico downloader.py
           cp README.md dist/
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: downloader-${{ matrix.os }}-py${{ env.python-version }}
           path: |
