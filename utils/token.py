@@ -1,24 +1,42 @@
 import os
 
 import requests
+import base64
+import json
+import time
+from selenium import webdriver
 
 
 def get_token():
     TOKEN_PATH = "token.txt"
-    if not os.path.exists(TOKEN_PATH):
-        print("Token Required.")
-        print("See README.md for help.")
-        print("*" * 30)
-        token = input("Please input your token: ")
-        with open(TOKEN_PATH, "w") as f:
-            f.write(token)
-        # raise FileNotFoundError(f'No such file: "{TOKEN_PATH}"')
-    else:
+    if os.path.exists(TOKEN_PATH):
         with open(TOKEN_PATH) as f:
             data = [v.strip() for v in f.read().splitlines()]
         if len(data) != 1:
-            raise Exception(f'Too many or too many lines in "{TOKEN_PATH}"')
+            raise Exception(f'Too few or too many lines in "{TOKEN_PATH}"')
         token = data[0]
+        try:
+            _, payload, _ = token.split(".")
+            value = json.loads(base64.b64decode(payload))
+            if time.time() > value["exp"] - 60:
+                print("Token need to renew.")
+                os.remove(TOKEN_PATH)
+                return get_token()
+        except Exception as e:
+            raise Exception(f"Error parsing token in {TOKEN_PATH}: {e}")
+    else:
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-automation", "enable-logging"]
+        )
+        driver = webdriver.Chrome(options=options)
+        driver.get("https://ereserves.lib.tsinghua.edu.cn/login")
+        print("Please login in the browser.")
+        input("Press Enter after login without closing the browser.")
+
+        token = driver.execute_script("return localStorage.License")
+    with open(TOKEN_PATH, "w") as f:
+        f.write(token)
     return token
 
 
