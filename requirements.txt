@@ -3,4 +3,5 @@ img2pdf
 pillow
 requests
 tqdm
-BeautifulSoup4
+beautifulsoup4
+selenium

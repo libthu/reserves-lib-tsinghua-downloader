@@ -14,11 +14,13 @@ Download pages from https://ereserves.lib.tsinghua.edu.cn/
 
 ## Token
 
-由于新版教参平台使用 SSO 单点登录，需要自行在网页上登录并获得 Token 才能访问资源。
+由于新版教参平台使用 SSO 单点登录，需要在自动打开的网页上自行登录并获得 Token 才能访问资源。**请放心程序不会访问和保存用户口令等个人敏感信息。**
 
 ![login.png](https://s2.loli.net/2024/09/13/xFezwadpABgl2tZ.png)
 
-通过统一身份认证登录后，在主页用 F12 或 Ctrl-Shift-I 打开开发者工具。进入“控制台”或“Console”选项卡，运行 `localStorage.License` 获取 Token。 将 Token 保存在同一目录下的 `token.txt` 文件中。**Token 的有效期为 1 个小时，如果过期需要重新登录。**
+通过统一身份认证登录后，**请先不要关闭浏览器**，在程序中输入回车，程序将自动获取 Token。Token 将保存在同一目录下的 `token.txt` 文件中。
+
+**Token 的有效期为 1 个小时，如果过期需要重新登录。**
 
 ## Usage
 
